@@ -1,0 +1,23 @@
+music_search.testing:
+  path: '/music_search/testing'
+  defaults:
+    _controller:  Drupal\music_search\Controller\MusicSearchController::testPage
+    _title: 'Testing route'
+  requirements:
+    _permission: 'access content'
+
+music_search.search_form:
+  path: '/music_search/search'
+  defaults:
+    _title: 'Testing Search'
+    _form: '\Drupal\music_search\Form\MusicSearchForm'
+  requirements:
+    _permission: 'access content'
+
+music_search.search_form.autocomplete:
+  path: '/music_search/search_form/autocomplete'
+  defaults:
+    _controller:  Drupal\music_search\Controller\MusicSearchController::searchFormAutocomplete
+    _format: json
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,8 @@
+name: Music Search
+description: Search for information on records, artists and publishers
+type: module
+core_version_requirement: ^9 || ^10
+package: Custom
+dependencies:
+  - drupal:system (>= 9.1)
+configure: music_search.settings
