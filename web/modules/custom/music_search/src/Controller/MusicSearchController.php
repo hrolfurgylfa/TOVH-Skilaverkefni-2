@@ -2,6 +2,7 @@
 namespace Drupal\music_search\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 /**
  * Controller for the salutation message.
  */
@@ -18,50 +19,11 @@ class MusicSearchController extends ControllerBase {
     ];
   }
   
-  public function searchFormAutocomplete() {
+  public function searchFormAutocomplete(Request $request) {
     $results = [];
-    # $input = $request->query->get('q');
+    $input = $request->query->get('q');
 
-    // // Get the typed string from the URL, if it exists.
-    // if (!$input) {
-    //   return new JsonResponse($results);
-    // }
-
-    // $input = Xss::filter($input);
-
-    // $query = $this->nodeStroage->getQuery()
-    //   ->condition('type', 'article')
-    //   ->condition('title', $input, 'CONTAINS')
-    //   ->groupBy('nid')
-    //   ->sort('created', 'DESC')
-    //   ->range(0, 10);
-
-    // $ids = $query->execute();
-    // $nodes = $ids ? $this->nodeStroage->loadMultiple($ids) : [];
-
-    // foreach ($nodes as $node) {
-    //   switch ($node->isPublished()) {
-    //     case TRUE:
-    //       $availability = '✅';
-    //       break;
-
-    //     case FALSE:
-    //     default:
-    //       $availability = '🚫';
-    //       break;
-    //   }
-
-    //   $label = [
-    //     $node->getTitle(),
-    //     '<small>(' . $node->id() . ')</small>',
-    //     $availability,
-    //   ];
-
-    //   $results[] = [
-    //     'value' => EntityAutocomplete::getEntityLabels([$node]),
-    //     'label' => implode(' ', $label),
-    //   ];
-    // }
+    # TODO: Call a module to search Spotify and discogs with $input
 
     array_push($results, "Yey");
     array_push($results, "Test");
