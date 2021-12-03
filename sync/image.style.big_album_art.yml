@@ -1,0 +1,15 @@
+uuid: 997c8cd1-7a62-4414-a811-9a8734cbd2a9
+langcode: en
+status: true
+dependencies: {  }
+name: big_album_art
+label: 'Big Album Art'
+effects:
+  abe3f7ab-0d63-4c9e-af2c-6cfd130c1e94:
+    uuid: abe3f7ab-0d63-4c9e-af2c-6cfd130c1e94
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 720
+      height: 720
+      anchor: center-center

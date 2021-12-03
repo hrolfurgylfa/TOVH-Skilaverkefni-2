@@ -1,0 +1,23 @@
+uuid: cb66037c-2f0a-4b0d-9709-1643d32b15d3
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: full_add
+label: 'Ad full size'
+effects:
+  f318f6e6-8208-4b87-84fb-9c7b6706ef5d:
+    uuid: f318f6e6-8208-4b87-84fb-9c7b6706ef5d
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 720
+      height: 480
+      crop_type: focal_point
+  5e88703e-3766-4d45-b19b-96b38f8e6446:
+    uuid: 5e88703e-3766-4d45-b19b-96b38f8e6446
+    id: image_convert
+    weight: 2
+    data:
+      extension: jpg

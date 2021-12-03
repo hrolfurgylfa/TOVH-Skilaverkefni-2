@@ -1,0 +1,44 @@
+uuid: 2fe9e45d-2e35-45ad-9377-dcde257a129f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.song.field_length
+    - field.field.node.song.field_spotify
+    - node.type.song
+  module:
+    - duration_field
+    - user
+id: node.song.default
+targetEntityType: node
+bundle: song
+mode: default
+content:
+  content_moderation_control:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_length:
+    weight: 1
+    label: above
+    settings:
+      text_length: full
+      separator: space
+    third_party_settings: {  }
+    type: duration_human_display
+    region: content
+  field_spotify:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

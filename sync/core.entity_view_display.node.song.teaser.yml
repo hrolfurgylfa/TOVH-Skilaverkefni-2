@@ -1,0 +1,39 @@
+uuid: 2e042910-a726-4601-957f-a062077e3fa6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.song.field_length
+    - field.field.node.song.field_spotify
+    - node.type.song
+  module:
+    - duration_field
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.song.teaser
+targetEntityType: node
+bundle: song
+mode: teaser
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_length:
+    type: duration_human_display
+    weight: 0
+    region: content
+    label: inline
+    settings:
+      text_length: short
+      separator: space
+    third_party_settings: {  }
+hidden:
+  field_spotify: true
+  links: true

@@ -1,0 +1,29 @@
+uuid: fe2c7083-45d8-4a4b-a52a-a0d2a3042a9e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_music_genre
+    - node.type.record
+    - taxonomy.vocabulary.music_genre
+id: node.record.field_music_genre
+field_name: field_music_genre
+entity_type: node
+bundle: record
+label: 'Music Genre'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      music_genre: music_genre
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

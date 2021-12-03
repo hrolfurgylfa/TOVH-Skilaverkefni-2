@@ -1,0 +1,29 @@
+uuid: bc514ac3-a26c-41d7-94da-f9b5b08347fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.record_promoted_to_frontpage
+  module:
+    - system
+    - views
+  theme:
+    - gin
+id: views_block__record_promoted_to_frontpage_block_1
+theme: gin
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:record_promoted_to_frontpage-block_1'
+settings:
+  id: 'views_block:record_promoted_to_frontpage-block_1'
+  label: Promoted
+  provider: views
+  label_display: visible
+  views_label: Promoted
+  items_per_page: '5'
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false

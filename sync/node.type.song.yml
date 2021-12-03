@@ -1,0 +1,17 @@
+uuid: fd00ac31-18b7-420a-824b-08442ad78be7
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Song
+type: song
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

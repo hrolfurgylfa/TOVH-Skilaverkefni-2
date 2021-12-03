@@ -1,0 +1,15 @@
+uuid: 6c67253d-7e28-4293-8343-b787746f12b2
+langcode: en
+status: true
+dependencies: {  }
+name: big_artist_
+label: 'Big Artist Image'
+effects:
+  60151eea-3ed8-401d-a5a4-7d7234f5bf0d:
+    uuid: 60151eea-3ed8-401d-a5a4-7d7234f5bf0d
+    id: image_scale
+    weight: 2
+    data:
+      width: 250
+      height: null
+      upscale: false

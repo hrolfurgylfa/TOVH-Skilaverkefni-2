@@ -1,0 +1,15 @@
+name: Gin Extras
+type: theme
+description: Gin with some small custom modifications
+core_version_requirement: ^9
+base theme: gin
+libraries:
+  - gin-extras/global-styling
+# Regions
+regions:
+  header: Header
+  featured: Featured
+  content: Content
+  sidebar_first: First sidebar
+  sidebar_second: Second sidebar
+  footer: Footer

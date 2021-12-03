@@ -1,0 +1,17 @@
+uuid: 7ce615b8-6556-4950-86e1-7c313340f8e6
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Home template'
+type: home_template
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

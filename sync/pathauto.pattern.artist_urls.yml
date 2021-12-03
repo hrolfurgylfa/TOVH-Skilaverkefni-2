@@ -1,0 +1,22 @@
+uuid: c3db17b8-d387-4bd7-b4c7-d7067bc43b7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: artist_urls
+label: 'Artist URLs'
+type: 'canonical_entities:node'
+pattern: '/artists/[node:title]'
+selection_criteria:
+  4eb311d9-ddef-4a85-86d5-8b41fec834a5:
+    id: node_type
+    bundles:
+      artist: artist
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 4eb311d9-ddef-4a85-86d5-8b41fec834a5
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,47 @@
+uuid: 88a833ab-a6f4-473c-850e-f3a4e0c2a6b9
+langcode: en
+status: true
+dependencies: {  }
+id: editor
+label: Editor
+weight: -7
+is_admin: null
+permissions:
+  - 'access coffee'
+  - 'access content overview'
+  - 'access toolbar'
+  - 'administer coffee'
+  - 'create article content'
+  - 'create artist content'
+  - 'create image media'
+  - 'create media'
+  - 'create publisher content'
+  - 'create record content'
+  - 'create song content'
+  - 'delete any article content'
+  - 'delete any artist content'
+  - 'delete any publisher content'
+  - 'delete any record content'
+  - 'delete any song content'
+  - 'edit any article content'
+  - 'edit any artist content'
+  - 'edit any publisher content'
+  - 'edit any record content'
+  - 'edit any song content'
+  - 'revert article revisions'
+  - 'revert artist revisions'
+  - 'revert publisher revisions'
+  - 'revert record revisions'
+  - 'revert song revisions'
+  - 'use admin toolbar search'
+  - 'use edit_content transition create_new_draft'
+  - 'use edit_content transition publish'
+  - 'use edit_content transition unpublish'
+  - 'view any unpublished content'
+  - 'view article revisions'
+  - 'view artist revisions'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view publisher revisions'
+  - 'view record revisions'
+  - 'view song revisions'

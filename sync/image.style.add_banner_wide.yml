@@ -1,0 +1,23 @@
+uuid: f0eded67-8de1-4ee5-8d5d-049d3722b234
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: add_banner_wide
+label: 'Ad banner wide'
+effects:
+  df9e4a2e-8282-43db-b941-5a97345fe325:
+    uuid: df9e4a2e-8282-43db-b941-5a97345fe325
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 720
+      height: 200
+      crop_type: focal_point
+  ff7434e0-b4be-4249-9529-c80a04f975c5:
+    uuid: ff7434e0-b4be-4249-9529-c80a04f975c5
+    id: image_convert
+    weight: 2
+    data:
+      extension: jpg

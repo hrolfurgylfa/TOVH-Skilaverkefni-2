@@ -1,0 +1,33 @@
+uuid: 5f0c3751-43e7-4613-bf5f-551def911bc1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.ad.field_format
+    - field.field.node.ad.field_image_medi
+    - field.field.node.ad.field_link
+    - node.type.ad
+  module:
+    - user
+id: node.ad.teaser
+targetEntityType: node
+bundle: ad
+mode: teaser
+content:
+  field_image_medi:
+    weight: 101
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_format: true
+  field_link: true

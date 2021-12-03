@@ -1,0 +1,29 @@
+uuid: a32df38c-a3f5-4697-b280-cdd1578eefbb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_logo
+    - media.type.image
+    - node.type.publisher
+id: node.publisher.field_logo
+field_name: field_logo
+entity_type: node
+bundle: publisher
+label: Logo
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

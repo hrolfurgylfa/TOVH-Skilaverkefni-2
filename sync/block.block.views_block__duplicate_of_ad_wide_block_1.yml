@@ -1,0 +1,29 @@
+uuid: 9ad35d5d-36f5-41af-90b9-bf09ff7fc8fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.duplicate_of_ad_wide
+  module:
+    - system
+    - views
+  theme:
+    - bartik
+id: views_block__duplicate_of_ad_wide_block_1
+theme: bartik
+region: content
+weight: -2
+provider: null
+plugin: 'views_block:duplicate_of_ad_wide-block_1'
+settings:
+  id: 'views_block:duplicate_of_ad_wide-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false

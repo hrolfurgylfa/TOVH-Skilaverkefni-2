@@ -1,0 +1,30 @@
+uuid: ca844cc6-8835-4bc2-889f-208d818b982c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_format
+field_name: field_format
+entity_type: node
+type: list_integer
+settings:
+  allowed_values:
+    -
+      value: 0
+      label: 'Banner Wide'
+    -
+      value: 1
+      label: 'Banner Tall'
+    -
+      value: 2
+      label: 'Full Width'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

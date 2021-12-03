@@ -1,0 +1,17 @@
+uuid: 9ce7c740-00e3-4e80-a5fb-f9c4d40ba8a5
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Artist
+type: artist
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

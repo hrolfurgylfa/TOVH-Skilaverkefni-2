@@ -1,0 +1,17 @@
+uuid: f14b81b9-fb00-4a60-b4f8-78061b3d87a0
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Record
+type: record
+description: 'A music record'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

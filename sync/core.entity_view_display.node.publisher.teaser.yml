@@ -1,0 +1,76 @@
+uuid: 586bee3f-d6b7-40cf-8471-3eb314578fd4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.publisher.field_birth_date
+    - field.field.node.publisher.field_death_date
+    - field.field.node.publisher.field_description
+    - field.field.node.publisher.field_images_2
+    - field.field.node.publisher.field_logo
+    - field.field.node.publisher.field_website
+    - image.style.teaser_artist_
+    - node.type.publisher
+  module:
+    - datetime
+    - link
+    - media
+    - user
+id: node.publisher.teaser
+targetEntityType: node
+bundle: publisher
+mode: teaser
+content:
+  content_moderation_control:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_birth_date:
+    type: datetime_default
+    weight: 2
+    region: content
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: short
+    third_party_settings: {  }
+  field_death_date:
+    type: datetime_default
+    weight: 3
+    region: content
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: short
+    third_party_settings: {  }
+  field_logo:
+    weight: 1
+    label: hidden
+    settings:
+      image_style: teaser_artist_
+      image_link: ''
+    third_party_settings: {  }
+    type: media_thumbnail
+    region: content
+  field_website:
+    type: link
+    weight: 4
+    region: content
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  links:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_description: true
+  field_images_2: true

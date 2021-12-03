@@ -1,0 +1,15 @@
+uuid: 3a2107c0-500f-4c23-9876-03ca3ce3fb4c
+langcode: en
+status: true
+dependencies: {  }
+name: publisher_logo_big
+label: 'Publisher logo big'
+effects:
+  677a4a43-a430-46a1-bb62-d8456adf71e7:
+    uuid: 677a4a43-a430-46a1-bb62-d8456adf71e7
+    id: image_scale
+    weight: 1
+    data:
+      width: 450
+      height: null
+      upscale: true

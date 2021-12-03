@@ -1,0 +1,76 @@
+uuid: acc3be26-9201-4421-a938-dda11f98b8d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.record.field_cover_image
+    - field.field.node.record.field_description
+    - field.field.node.record.field_music_genre
+    - field.field.node.record.field_performer
+    - field.field.node.record.field_publisher
+    - field.field.node.record.field_release_year
+    - field.field.node.record.field_song
+    - image.style.small_
+    - node.type.record
+  module:
+    - layout_builder
+    - media
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.record.teaser
+targetEntityType: node
+bundle: record
+mode: teaser
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_cover_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: small_
+      image_link: ''
+    third_party_settings: {  }
+  field_performer:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_publisher:
+    type: entity_reference_label
+    weight: 2
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_release_year:
+    type: number_integer
+    weight: 3
+    region: content
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+  links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_description: true
+  field_music_genre: true
+  field_song: true

@@ -1,0 +1,55 @@
+uuid: ce3287a7-c776-4e46-9a42-da119367e6a2
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.article
+    - node.type.artist
+    - node.type.publisher
+    - node.type.record
+    - node.type.song
+  module:
+    - content_moderation
+id: edit_content
+label: 'Edit Content'
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      published: false
+      default_revision: false
+      weight: 0
+    published:
+      label: Published
+      published: true
+      default_revision: true
+      weight: 1
+  transitions:
+    create_new_draft:
+      label: 'Create New Draft'
+      to: draft
+      weight: 0
+      from:
+        - draft
+    publish:
+      label: Publish
+      to: published
+      weight: 1
+      from:
+        - draft
+        - published
+    unpublish:
+      label: Unpublish
+      from:
+        - published
+      to: draft
+      weight: 2
+  entity_types:
+    node:
+      - article
+      - artist
+      - publisher
+      - record
+      - song
+  default_moderation_state: draft

@@ -1,0 +1,8 @@
+uuid: 1363d4e7-1ab9-4e03-b730-ac91c108f4a7
+langcode: en
+status: true
+dependencies: {  }
+name: 'Music Genre'
+vid: music_genre
+description: 'Groups of music'
+weight: 0

@@ -1,0 +1,21 @@
+uuid: 54aa260b-ce47-4f2d-95b7-73f143e4c26b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_format
+    - node.type.ad
+  module:
+    - options
+id: node.ad.field_format
+field_name: field_format
+entity_type: node
+bundle: ad
+label: Format
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

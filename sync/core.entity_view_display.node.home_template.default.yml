@@ -1,0 +1,41 @@
+uuid: f815a611-9655-4684-a22a-31e20b105775
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.home_template.body
+    - node.type.home_template
+  module:
+    - layout_builder
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_fourcol_section
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components: {  }
+        third_party_settings: {  }
+id: node.home_template.default
+targetEntityType: node
+bundle: home_template
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

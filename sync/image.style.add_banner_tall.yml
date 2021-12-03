@@ -1,0 +1,23 @@
+uuid: 914b69f6-b4d1-4dcd-a0e6-f77bf6322878
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: add_banner_tall
+label: 'Ad banner tall'
+effects:
+  86cb07b8-6956-4c30-93aa-7adcde75a6be:
+    uuid: 86cb07b8-6956-4c30-93aa-7adcde75a6be
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 200
+      height: 500
+      crop_type: focal_point
+  5a4bb1de-9e58-4b92-bc63-c6acd317563c:
+    uuid: 5a4bb1de-9e58-4b92-bc63-c6acd317563c
+    id: image_convert
+    weight: 2
+    data:
+      extension: jpg

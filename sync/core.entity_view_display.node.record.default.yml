@@ -1,0 +1,257 @@
+uuid: 0ff53324-21e9-4e8e-a917-35d64d9b8bda
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.record.field_cover_image
+    - field.field.node.record.field_description
+    - field.field.node.record.field_music_genre
+    - field.field.node.record.field_performer
+    - field.field.node.record.field_publisher
+    - field.field.node.record.field_release_year
+    - field.field.node.record.field_song
+    - image.style.big_album_art
+    - node.type.record
+  module:
+    - layout_builder
+    - layout_discovery
+    - media
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_twocol_section
+        layout_settings:
+          label: ''
+          column_widths: 50-50
+          context_mapping: {  }
+        components:
+          edb1d804-cc73-4800-916e-67429d0e38c7:
+            uuid: edb1d804-cc73-4800-916e-67429d0e38c7
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:record:field_cover_image'
+              formatter:
+                type: media_thumbnail
+                label: hidden
+                settings:
+                  image_style: big_album_art
+                  image_link: ''
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          7b65a8d2-2e49-4227-bbfd-205fec6bec7c:
+            uuid: 7b65a8d2-2e49-4227-bbfd-205fec6bec7c
+            region: second
+            configuration:
+              id: 'field_block:node:record:field_song'
+              label: Songs
+              provider: layout_builder
+              label_display: visible
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: teaser
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 3
+          3bb6826f-fc2d-4255-ac60-f7d83fff207c:
+            uuid: 3bb6826f-fc2d-4255-ac60-f7d83fff207c
+            region: second
+            configuration:
+              id: 'field_block:node:record:field_release_year'
+              label: 'Release Year'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: number_integer
+                settings:
+                  thousand_separator: ''
+                  prefix_suffix: true
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          2a520db5-e870-4470-9ba7-6aa18339420b:
+            uuid: 2a520db5-e870-4470-9ba7-6aa18339420b
+            region: second
+            configuration:
+              id: 'field_block:node:record:field_publisher'
+              label: Publisher
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: entity_reference_label
+                settings:
+                  link: true
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 2
+          305ead41-db9c-4e1a-99bd-8a46ea834718:
+            uuid: 305ead41-db9c-4e1a-99bd-8a46ea834718
+            region: second
+            configuration:
+              id: 'field_block:node:record:field_performer'
+              label: Performer
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: entity_reference_label
+                settings:
+                  link: true
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 1
+          1f95a111-8f79-4046-a8e9-547df5bb1634:
+            uuid: 1f95a111-8f79-4046-a8e9-547df5bb1634
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:record:content_moderation_control'
+            additional: {  }
+            weight: 1
+          e80ef2bc-ae0f-4ca6-8001-18fc28ce799b:
+            uuid: e80ef2bc-ae0f-4ca6-8001-18fc28ce799b
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:record:field_music_genre'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 2
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          6f89aae7-e7c4-4e3a-ac88-ce2efe4f6b63:
+            uuid: 6f89aae7-e7c4-4e3a-ac88-ce2efe4f6b63
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:record:field_description'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: basic_string
+            additional: {  }
+            weight: 6
+          9fa048e8-2946-4026-978e-4a13dc505b80:
+            uuid: 9fa048e8-2946-4026-978e-4a13dc505b80
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:record:links'
+            additional: {  }
+            weight: 7
+        third_party_settings: {  }
+id: node.record.default
+targetEntityType: node
+bundle: record
+mode: default
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: first
+  field_cover_image:
+    type: media_thumbnail
+    weight: 1
+    label: hidden
+    settings:
+      image_style: big_album_art
+      image_link: ''
+    third_party_settings: {  }
+    region: content
+  field_description:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_music_genre:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: first
+  field_performer:
+    weight: 4
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_publisher:
+    weight: 5
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_release_year:
+    weight: 2
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_song:
+    weight: 6
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  layout_builder__layout: true

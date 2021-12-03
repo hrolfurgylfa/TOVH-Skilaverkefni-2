@@ -1,0 +1,20 @@
+uuid: c259accc-f111-4f84-b1e6-06d1b8910ac8
+langcode: en
+status: true
+dependencies: {  }
+id: writer
+label: Writer
+weight: -8
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access toolbar'
+  - 'create article content'
+  - 'create artist content'
+  - 'create image media'
+  - 'create media'
+  - 'create publisher content'
+  - 'create record content'
+  - 'create song content'
+  - 'use edit_content transition create_new_draft'
+  - 'view own unpublished content'

@@ -1,0 +1,23 @@
+uuid: f4ee0f5d-3e30-4ca7-b29f-cb1eed5d749c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_website
+    - node.type.artist
+  module:
+    - link
+id: node.artist.field_website
+field_name: field_website
+entity_type: node
+bundle: artist
+label: Website
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

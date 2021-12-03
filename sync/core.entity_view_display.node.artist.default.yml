@@ -1,0 +1,259 @@
+uuid: 81bf662b-1bcf-4497-9cc6-6197f2bfbfc3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.artist.field_band_members
+    - field.field.node.artist.field_birth_date
+    - field.field.node.artist.field_death_date
+    - field.field.node.artist.field_description
+    - field.field.node.artist.field_images_media
+    - field.field.node.artist.field_mus
+    - field.field.node.artist.field_website
+    - field.field.node.artist.layout_builder__layout
+    - node.type.artist
+  module:
+    - datetime
+    - layout_builder
+    - layout_discovery
+    - link
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_twocol_section
+        layout_settings:
+          label: ''
+          column_widths: 33-67
+          context_mapping: {  }
+        components:
+          881c060f-65c5-46bb-b25b-e8cb424071aa:
+            uuid: 881c060f-65c5-46bb-b25b-e8cb424071aa
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_band_members'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 4
+          8cf946b5-3c15-4498-b778-193ff944d47a:
+            uuid: 8cf946b5-3c15-4498-b778-193ff944d47a
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_birth_date'
+              formatter:
+                label: inline
+                settings:
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+                type: datetime_default
+            additional: {  }
+            weight: 1
+          349c13cf-7ea6-4ec9-b236-42b45968a1b2:
+            uuid: 349c13cf-7ea6-4ec9-b236-42b45968a1b2
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_death_date'
+              formatter:
+                label: inline
+                settings:
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+                type: datetime_default
+            additional: {  }
+            weight: 2
+          ac4e3c6b-fc85-4bf1-9365-fc6c0312b806:
+            uuid: ac4e3c6b-fc85-4bf1-9365-fc6c0312b806
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_website'
+              formatter:
+                label: inline
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: ''
+                  target: ''
+                third_party_settings: {  }
+                type: link
+            additional: {  }
+            weight: 3
+          6c8c164b-09b2-4337-b925-d5b05122107c:
+            uuid: 6c8c164b-09b2-4337-b925-d5b05122107c
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_description'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: basic_string
+            additional: {  }
+            weight: 5
+          cf3c6e1c-8c5a-428f-b220-c653b8e25ee0:
+            uuid: cf3c6e1c-8c5a-428f-b220-c653b8e25ee0
+            region: first
+            configuration:
+              id: 'field_block:node:artist:field_images_media'
+              label: Images
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: media_thumbnail
+                settings:
+                  image_style: big_artist_
+                  image_link: ''
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 5
+          0458014a-5caa-4ef5-a130-f9900bbf5d5f:
+            uuid: 0458014a-5caa-4ef5-a130-f9900bbf5d5f
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_mus'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 6
+          ec10d311-1856-4862-9ae4-04b99eb6d859:
+            uuid: ec10d311-1856-4862-9ae4-04b99eb6d859
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:artist:content_moderation_control'
+            additional: {  }
+            weight: 8
+          7e211063-7311-4641-8b10-4dccd7c68145:
+            uuid: 7e211063-7311-4641-8b10-4dccd7c68145
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:artist:links'
+            additional: {  }
+            weight: 7
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components: {  }
+        third_party_settings: {  }
+id: node.artist.default
+targetEntityType: node
+bundle: artist
+mode: default
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: first
+  field_band_members:
+    weight: 4
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_birth_date:
+    weight: 1
+    label: inline
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_death_date:
+    weight: 2
+    label: inline
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_description:
+    weight: 5
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_images_media:
+    label: above
+    type: entity_reference_entity_view
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 10
+    region: first
+  field_mus:
+    weight: 8
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: first
+  field_website:
+    weight: 3
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  links:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  layout_builder__layout: true

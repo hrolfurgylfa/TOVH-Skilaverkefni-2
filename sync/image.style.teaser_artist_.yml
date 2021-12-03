@@ -1,0 +1,17 @@
+uuid: c61c7d83-9156-4546-b01c-d60bc75c0dfe
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: teaser_artist_
+label: 'Teaser Artist Image'
+effects:
+  09127ede-383d-4114-9410-1562f26eaf14:
+    uuid: 09127ede-383d-4114-9410-1562f26eaf14
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 150
+      height: 150
+      crop_type: focal_point

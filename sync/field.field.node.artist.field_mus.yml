@@ -1,0 +1,33 @@
+uuid: e7d8ab49-a7bd-47ad-988b-6a8e4fde5f23
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mus
+    - node.type.artist
+    - taxonomy.vocabulary.music_genre
+  content:
+    - 'taxonomy_term:music_genre:ae7ea26b-f83b-4dc1-821a-d37cf1cdfa18'
+id: node.artist.field_mus
+field_name: field_mus
+entity_type: node
+bundle: artist
+label: 'Music Genre'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: ae7ea26b-f83b-4dc1-821a-d37cf1cdfa18
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      music_genre: music_genre
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

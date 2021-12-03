@@ -1,0 +1,21 @@
+uuid: 8c67da40-8cd7-4099-95e3-832d192c3e93
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_death_date
+    - node.type.artist
+  module:
+    - datetime
+id: node.artist.field_death_date
+field_name: field_death_date
+entity_type: node
+bundle: artist
+label: 'Death Date'
+description: 'The date of death if the artist is no longer around'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

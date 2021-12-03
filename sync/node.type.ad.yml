@@ -1,0 +1,17 @@
+uuid: 90e23f01-dcb8-4243-a601-83b2f532438f
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Ad
+type: ad
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

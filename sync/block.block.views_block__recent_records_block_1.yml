@@ -1,0 +1,29 @@
+uuid: c4547c60-c096-40ab-b362-1ce63c1a82a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.recent_records
+  module:
+    - system
+    - views
+  theme:
+    - gin
+id: views_block__recent_records_block_1
+theme: gin
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:recent_records-block_1'
+settings:
+  id: 'views_block:recent_records-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false

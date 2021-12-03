@@ -1,0 +1,15 @@
+uuid: 1bacbb95-9e0e-49a1-b947-a12eea949d3c
+langcode: en
+status: true
+dependencies: {  }
+name: publisher_other_images_big
+label: 'Publisher other images big'
+effects:
+  b36f4bf3-52ad-4531-ba15-1c6527157917:
+    uuid: b36f4bf3-52ad-4531-ba15-1c6527157917
+    id: image_scale
+    weight: 1
+    data:
+      width: 225
+      height: null
+      upscale: true

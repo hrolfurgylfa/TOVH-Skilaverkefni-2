@@ -1,0 +1,21 @@
+uuid: d00a633f-bad1-4ea2-a05a-c7b0f0fda751
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_death_date
+    - node.type.publisher
+  module:
+    - datetime
+id: node.publisher.field_death_date
+field_name: field_death_date
+entity_type: node
+bundle: publisher
+label: 'Death Date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

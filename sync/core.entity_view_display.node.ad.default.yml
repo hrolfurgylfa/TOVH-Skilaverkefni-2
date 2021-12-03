@@ -1,0 +1,52 @@
+uuid: bd734d01-13ee-4a12-aa95-ae88119e603b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.ad.field_format
+    - field.field.node.ad.field_image_medi
+    - field.field.node.ad.field_link
+    - node.type.ad
+  module:
+    - link
+    - options
+    - user
+id: node.ad.default
+targetEntityType: node
+bundle: ad
+mode: default
+content:
+  field_format:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_image_medi:
+    type: entity_reference_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_link:
+    weight: 103
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

@@ -1,0 +1,22 @@
+uuid: c90680c5-f024-4612-bd01-28406191edca
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: publisher_urls
+label: 'Publisher URLs'
+type: 'canonical_entities:node'
+pattern: '/publishers/[node:title]'
+selection_criteria:
+  d47b5d8f-f461-450d-a88e-b698a7da1ee8:
+    id: node_type
+    bundles:
+      publisher: publisher
+    negate: false
+    context_mapping:
+      node: node
+    uuid: d47b5d8f-f461-450d-a88e-b698a7da1ee8
+selection_logic: and
+weight: -5
+relationships: {  }

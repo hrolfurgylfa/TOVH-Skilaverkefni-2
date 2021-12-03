@@ -1,0 +1,17 @@
+uuid: def102a7-c909-4aef-9d6f-063d19bd279f
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Publisher
+type: publisher
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

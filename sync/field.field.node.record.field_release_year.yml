@@ -1,0 +1,23 @@
+uuid: 76379cc7-e6c2-4930-99a4-aa98826acc13
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_year
+    - node.type.record
+id: node.record.field_release_year
+field_name: field_release_year
+entity_type: node
+bundle: record
+label: 'Release Year'
+description: 'The year the record was released'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

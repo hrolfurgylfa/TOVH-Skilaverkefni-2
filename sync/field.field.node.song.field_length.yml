@@ -1,0 +1,22 @@
+uuid: 762974f3-6bb8-483f-8060-a4d595720faf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_length
+    - node.type.song
+  module:
+    - duration_field
+id: node.song.field_length
+field_name: field_length
+entity_type: node
+bundle: song
+label: Length
+description: 'Length of a song'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  granularity: 'h:i:s'
+field_type: duration

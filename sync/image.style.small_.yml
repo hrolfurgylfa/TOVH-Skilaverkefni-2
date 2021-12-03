@@ -1,0 +1,15 @@
+uuid: 81760e94-99ea-4215-85f3-b8df517e4088
+langcode: en
+status: true
+dependencies: {  }
+name: small_
+label: 'Teaser Album Art'
+effects:
+  50518c96-6ab1-4f0c-9ef7-bfc068508b5a:
+    uuid: 50518c96-6ab1-4f0c-9ef7-bfc068508b5a
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 200
+      height: 200
+      anchor: center-center
