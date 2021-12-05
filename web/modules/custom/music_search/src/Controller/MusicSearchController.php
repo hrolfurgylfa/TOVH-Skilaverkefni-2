@@ -1,12 +1,16 @@
 <?php
+
 namespace Drupal\music_search\Controller;
+
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Controller for the salutation message.
  */
 class MusicSearchController extends ControllerBase {
+
   /**
    * Hello World.
    *
@@ -18,16 +22,22 @@ class MusicSearchController extends ControllerBase {
       '#markup' => $this->t('Hello World'),
     ];
   }
-  
+
+  /**
+   * Provide autocomplete for records.
+   *
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request coming in.
+   */
   public function searchFormAutocomplete(Request $request) {
     $results = [];
     $input = $request->query->get('q');
 
-    # TODO: Call a module to search Spotify and discogs with $input
-
+    // @todo Call a module to search Spotify and discogs with $input
     array_push($results, "Yey");
     array_push($results, "Test");
 
     return new JsonResponse($results);
   }
+
 }

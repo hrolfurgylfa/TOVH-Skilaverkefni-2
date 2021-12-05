@@ -11,8 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form to handle article autocomplete.
  */
-class MusicSearchForm extends FormBase
-{
+class MusicSearchForm extends FormBase {
 
   /**
    * The node storage.
@@ -24,16 +23,14 @@ class MusicSearchForm extends FormBase
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager)
-  {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')
     );
@@ -42,8 +39,7 @@ class MusicSearchForm extends FormBase
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state)
-  {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['article'] = [
       '#type' => 'textfield',
       '#title' => $this->t('My Autocomplete'),
@@ -62,13 +58,16 @@ class MusicSearchForm extends FormBase
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Extracts the entity ID from the autocompletion result.
     $article_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($form_state->getValue('article'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return "music_search_search_form";
   }
+
 }
