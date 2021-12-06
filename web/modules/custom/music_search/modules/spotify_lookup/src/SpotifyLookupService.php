@@ -94,6 +94,9 @@ class SpotifyLookupService {
     }
 
     $name_list = [];
+    $config = $this->configFactory->get("spotify_lookup.credentials");
+    $client_id = $config->get("spotify_client_id");
+    $client_secret = $config->get("spotify_client_secret");
     foreach ($response->artists->items as $item) {
       array_push($name_list, $item->name);
     }

@@ -18,7 +18,7 @@ class SpotifyConfigurationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['spotify_lookup.spotify_client_id'];
+    return ['spotify_lookup.credentials'];
   }
 
   /**
@@ -32,7 +32,7 @@ class SpotifyConfigurationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('spotify_lookup.spotify_client_id');
+    $config = $this->config('spotify_lookup.credentials');
     $form['spotify_client_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Spotify Client ID'),
@@ -52,7 +52,7 @@ class SpotifyConfigurationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('spotify_lookup.spotify_client_id')
+    $this->config('spotify_lookup.credentials')
       ->set('spotify_client_id', $form_state->getValue('spotify_client_id'))
       ->set('spotify_client_secret', $form_state->getValue('spotify_client_secret'))
       ->save();
