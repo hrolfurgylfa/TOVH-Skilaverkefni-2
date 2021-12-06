@@ -1,0 +1,7 @@
+name: Spotify Lookup
+description: Lookup data on spotify
+type: module
+core_version_requirement: ^9 || ^10
+package: Custom
+dependencies:
+  - drupal:system (>= 9.1)
