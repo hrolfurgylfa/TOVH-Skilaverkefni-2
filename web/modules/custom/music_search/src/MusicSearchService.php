@@ -34,6 +34,7 @@ class MusicSearchService {
    * Search on spotify.
    */
   public function search(String $text) {
+    // @todo Look from the discogs API as well
     return $this->spotifyLookup->search($text);
   }
 
