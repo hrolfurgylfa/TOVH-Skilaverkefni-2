@@ -1,30 +1,19 @@
 <?php
+/**
+ * @file
+ * Contains \Drupal\Spotify_lookup\Controller\SpotifyController.
+ */
 
-namespace Drupal\music_search\Controller;
+namespace Drupal\Spotify_lookup\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Spotify_lookup\Controller\SpotifyController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use GuzzleHttp\Exception\GuzzleException;
 
 
-/**
- * Controller for the salutation message.
- */
-class MusicSearchController extends ControllerBase {
+class SpotifyController extends ControllerBase
+{
 
-  /**
-   * Hello World.
-   *
-   * @return array
-   *   Our message.
-   */
-  public function testPage() {
-    return [
-      '#markup' => $this->t('Hello World'),
-    ];
-  }
+  protected $client;
 
   public function __construct()
   {
@@ -75,25 +64,6 @@ class MusicSearchController extends ControllerBase {
 
   }
 
-  /**
-   * Provide autocomplete for records.
-   *
-   * @param Symfony\Component\HttpFoundation\Request $request
-   *   The request coming in.
-   */
-  public function searchFormAutocomplete(Request $request) {
-    $results = [];
-    $input = $request->query->get('q');
-
-    // @todo Call a module to search Spotify and discogs with $input
-
-    $s = $this->artist('6eUKZXaKkcviH0Ku9w2n3V');
-    array_push($results, $s->name);
-    array_push($results, 'What is this');
-
-    return new JsonResponse($results);
-  }
-
-
-
 }
+
+
