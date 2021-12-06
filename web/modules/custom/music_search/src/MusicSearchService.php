@@ -24,6 +24,13 @@ class MusicSearchService {
   }
 
   /**
+   * Get an artist from spotify.
+   */
+  public function getSpotifyArtist(String $id) {
+    return $this->spotifyLookup->artist($id);
+  }
+
+  /**
    * Search on spotify.
    */
   public function search(String $text) {
