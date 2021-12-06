@@ -64,7 +64,6 @@ class SpotifyLookupService {
       $responseArtist = json_decode($requestArtist->getBody());
     }
     catch (GuzzleException $e) {
-      echo 'Error page 2';
       return \Drupal::logger('spotify_client')->error($e);
     }
 
@@ -75,10 +74,27 @@ class SpotifyLookupService {
   /**
    * Search for a song on spotify.
    */
-  public function search(String $text) {
-    $results = ["a", "b", "c"];
+  public function search(String $text, String $type) {
+    $auth = $this->authorization();
 
-    return $results;
+    try {
+      $request = $this->client->request('GET', 'https://api.spotify.com/v1/search?q=' . $text . '&type=' . $type, [
+        'headers' => [
+          'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+        ],
+      ]);
+
+      $response = json_decode($request->getBody());
+    }
+    catch (GuzzleException $e) {
+      return \Drupal::logger('spotify_client')->error($e);
+    }
+
+    $name_list = [];
+    foreach($response->artists->items as $item) {
+      array_push($name_list, $item->name);
+        }
+    return $name_list;
   }
 
 }

@@ -34,7 +34,9 @@ class MusicSearchService {
    * Search on spotify.
    */
   public function search(String $text) {
-    return $this->spotifyLookup->search($text);
+    $type = 'artist';
+    $list = $this->spotifyLookup->search($text, $type);
+    return $list;
   }
 
 }
