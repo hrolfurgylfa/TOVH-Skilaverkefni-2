@@ -1,2 +1,3 @@
-spotify_lookup:
-  class: Drupal\spotify_lookup\SpotifyLookupService
+services:
+  spotify_lookup:
+    class: Drupal\spotify_lookup\SpotifyLookupService

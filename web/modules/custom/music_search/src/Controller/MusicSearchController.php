@@ -3,6 +3,8 @@
 namespace Drupal\music_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\music_search\MusicSearchService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,15 +14,26 @@ use Symfony\Component\HttpFoundation\Request;
 class MusicSearchController extends ControllerBase {
 
   /**
-   * Hello World.
+   * Store the injected MusicSearchService.
    *
-   * @return array
-   *   Our message.
+   * @var \Drupal\music_search\MusicSearchService
    */
-  public function testPage() {
-    return [
-      '#markup' => $this->t('Hello World'),
-    ];
+  protected $musicSearch;
+
+  /**
+   * Construct the class.
+   */
+  public function __construct(MusicSearchService $musicSearch) {
+    $this->musicSearch = $musicSearch;
+  }
+
+  /**
+   * Inject the dependencies.
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get("music_search")
+    );
   }
 
   /**
@@ -30,12 +43,9 @@ class MusicSearchController extends ControllerBase {
    *   The request coming in.
    */
   public function searchFormAutocomplete(Request $request) {
-    $results = [];
     $input = $request->query->get('q');
 
-    // @todo Call a module to search Spotify and discogs with $input
-    array_push($results, "Yey");
-    array_push($results, "Test");
+    $results = $this->musicSearch->search($input);
 
     return new JsonResponse($results);
   }

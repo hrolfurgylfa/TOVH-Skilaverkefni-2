@@ -16,7 +16,7 @@ class SpotifyLookupService {
    * Search for a song on spotify.
    */
   public function search(String $text) {
-    $results = ["a", "b"];
+    $results = ["a", "b", "c"];
 
     return $results;
   }
