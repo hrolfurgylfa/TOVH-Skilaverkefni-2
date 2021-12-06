@@ -25,7 +25,7 @@ class SpotifyConfigurationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'salutation_configuration_form';
+    return 'spotify_lookup_configuration_form';
   }
 
   /**
@@ -33,11 +33,17 @@ class SpotifyConfigurationForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('spotify_lookup.spotify_client_id');
-    $form['salutation'] = [
+    $form['spotify_client_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Spotify Client ID'),
       '#description' => $this->t('Please provide the Spotify Client ID you want to use.'),
       '#default_value' => $config->get('spotify_client_id'),
+    ];
+    $form['spotify_client_secret'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Spotify Client Secret'),
+      '#description' => $this->t('Please provide the Spotify Client Secret you want to use.'),
+      '#default_value' => $config->get('spotify_client_secret'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -48,6 +54,7 @@ class SpotifyConfigurationForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('spotify_lookup.spotify_client_id')
       ->set('spotify_client_id', $form_state->getValue('spotify_client_id'))
+      ->set('spotify_client_secret', $form_state->getValue('spotify_client_secret'))
       ->save();
     parent::submitForm($form, $form_state);
   }

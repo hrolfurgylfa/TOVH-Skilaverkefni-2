@@ -2,6 +2,7 @@
 
 namespace Drupal\spotify_lookup;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
@@ -15,12 +16,14 @@ use GuzzleHttp\Exception\GuzzleException;
 class SpotifyLookupService {
 
   protected $client;
+  protected $configFactory;
 
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct() {
+  public function __construct(ConfigFactoryInterface $configFactory) {
     $this->client = \Drupal::httpClient();
+    $this->configFactory = $configFactory;
   }
 
   /**
