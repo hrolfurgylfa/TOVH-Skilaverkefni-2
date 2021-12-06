@@ -78,6 +78,10 @@ class SpotifyLookupService {
   public function search(String $text) {
     $results = ["a", "b", "c"];
 
+    $config = \Drupal::config("spotify_lookup");
+    $client_id = $config->get("spotify_client_id");
+    array_push($results, $client_id);
+
     return $results;
   }
 

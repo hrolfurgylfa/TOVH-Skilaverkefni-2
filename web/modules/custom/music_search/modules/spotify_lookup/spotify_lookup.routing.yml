@@ -1,0 +1,7 @@
+spotify_lookup.configuration:
+  path: /admin/config/spotify-configuration
+  defaults:
+    _form: \Drupal\spotify_lookup\Form\SpotifyConfigurationForm
+    _title: Spotify Configuration
+  requirements:
+    _permission: administer site configuration
