@@ -7,6 +7,7 @@ namespace Drupal\spotify_lookup\Form;
  */
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  *
