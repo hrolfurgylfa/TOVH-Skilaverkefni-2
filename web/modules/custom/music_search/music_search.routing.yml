@@ -1,11 +1,3 @@
-music_search.testing:
-  path: '/music_search/testing'
-  defaults:
-    _controller:  Drupal\music_search\Controller\MusicSearchController::testPage
-    _title: 'Testing route'
-  requirements:
-    _permission: 'access content'
-
 music_search.search_form:
   path: '/music_search/search'
   defaults:
