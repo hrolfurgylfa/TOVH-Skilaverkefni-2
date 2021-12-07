@@ -13,3 +13,11 @@ music_search.search_form.autocomplete:
     _format: json
   requirements:
     _permission: 'access content'
+
+music_search.create.artist:
+  path: '/music_search/create/artist'
+  defaults:
+    _title: Create Artist
+    _form:  \Drupal\music_search\Form\SaveArtistAutocomplete
+  requirements:
+    _permission: 'access content'
