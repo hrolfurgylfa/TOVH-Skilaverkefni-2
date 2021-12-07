@@ -56,7 +56,7 @@ class MusicSearchService {
    *   An array containing the Spotify ID under the key spotify and the Discogs
    *   ID under the key discogs
    */
-  public function getIdsByName(string $name, string $type): Array {
+  public function getIdsByName(string $name, string $type): array {
     return [
       "spotify" => $this->spotifyLookup->getIdByName($name, $type),
     ];
