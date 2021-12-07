@@ -48,7 +48,24 @@ class MusicSearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $type = \Drupal::routeMatch()->getParameter('type');
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['goToArtistSearch'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Artist search'),
+      '#submit' => array([$this, 'goToArtistSearch']),
+    ];
+    $form['actions']['goToTrackSearch'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Track search'),
+      '#submit' => array([$this, 'goToTrackSearch']),
+    ];
+    $form['actions']['goToAlbumSearch'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Album search'),
+      '#submit' => array([$this, 'goToAlbumSearch']),
+    ];
+
+    $type = \Drupal::routeMatch()->getParameter('autocomplete_type');
     $form['article'] = [
       '#type' => 'textfield',
       '#title' => $this->t('My Autocomplete'),
@@ -56,13 +73,28 @@ class MusicSearchForm extends FormBase {
       '#autocomplete_route_parameters' => array('search_type' => $type),
     ];
 
-    $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
     ];
 
     return $form;
+  }
+
+  public function goToArtistSearch(array $form, FormStateInterface $form_state) {
+    $url = "https://tonlistavefur-islands.ddev.site/music_search/search/artist";
+    $response = new RedirectResponse($url);
+    $response->send();
+  }
+  public function goToTrackSearch(array $form, FormStateInterface $form_state) {
+    $url = "https://tonlistavefur-islands.ddev.site/music_search/search/track";
+    $response = new RedirectResponse($url);
+    $response->send();
+  }
+  public function goToAlbumSearch(array $form, FormStateInterface $form_state) {
+    $url = "https://tonlistavefur-islands.ddev.site/music_search/search/album";
+    $response = new RedirectResponse($url);
+    $response->send();
   }
 
   /**
