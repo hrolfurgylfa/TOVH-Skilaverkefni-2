@@ -81,7 +81,7 @@ class SpotifyLookupService {
     $auth = $this->authorization();
 
     try {
-      $request = $this->client->request('GET', 'https://api.spotify.com/v1/search?q=' . $text . '&type=' . $type . '&limit=10', [
+      $request = $this->client->request('GET', 'https://api.spotify.com/v1/search?q=' . urlencode($text) . '&type=' . urlencode($type) . '&limit=10', [
         'headers' => [
           'Authorization' => $auth->token_type . ' ' . $auth->access_token,
         ],
