@@ -49,33 +49,44 @@ class SpotifyLookupService {
   }
 
   /**
-   * Finding artist.
+   * Finding all information about an artist/album/track/.
+   *
+   * @param string $category
+   *   The category that the ID belongs to, either artists, albums or tracks
    *
    * @param string $id
-   *   The spotify ID of the artist.
+   *   The spotify ID
+   *
    */
-  public function artist($id) {
+  public function idsearch($id, $category) {
     $auth = $this->authorization();
 
     try {
-      $requestArtist = $this->client->request('GET', 'https://api.spotify.com/v1/artists/' . $id, [
+      $request = $this->client->request('GET', 'https://api.spotify.com/v1/' . $category . '/' . $id, [
         'headers' => [
           'Authorization' => $auth->token_type . ' ' . $auth->access_token,
         ],
       ]);
 
-      $responseArtist = json_decode($requestArtist->getBody());
+      $response = json_decode($request->getBody());
     }
     catch (GuzzleException $e) {
       return \Drupal::logger('spotify_client')->error($e);
     }
 
-    return $responseArtist;
+    return $response;
 
   }
 
+
   /**
-   * Search for a song on spotify.
+   * Search in Spotify with a string.
+   *
+   * @param String $text
+   *   The searched for text
+   *
+   * @param String $type
+   *   The category being searched in, either artist, album or track
    */
   public function search(String $text, String $type) {
     $auth = $this->authorization();

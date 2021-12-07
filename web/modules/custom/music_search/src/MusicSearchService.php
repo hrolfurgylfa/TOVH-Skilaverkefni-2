@@ -27,7 +27,21 @@ class MusicSearchService {
    * Get an artist from spotify.
    */
   public function getSpotifyArtist(String $id) {
-    return $this->spotifyLookup->artist($id);
+    return $this->spotifyLookup->idsearch($id, 'artists');
+  }
+
+  /**
+   * Get an album from spotify.
+   */
+  public function getSpotifyAlbum(String $id) {
+    return $this->spotifyLookup->idsearch($id, 'albums');
+  }
+
+  /**
+   * Get a track from spotify.
+   */
+  public function getSpotifyTrack(String $id) {
+    return $this->spotifyLookup->idsearch($id, 'tracks');
   }
 
   /**
