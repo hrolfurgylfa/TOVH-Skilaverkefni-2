@@ -45,9 +45,27 @@ class MusicSearchService {
   }
 
   /**
+   * Get the spotify and discogs IDs by the name of some artist/album/track.
+   *
+   * @param string $name
+   *   The name of the artist/album/track.
+   * @param string $type
+   *   One of artist/album/track.
+   *
+   * @return array
+   *   An array containing the Spotify ID under the key spotify and the Discogs
+   *   ID under the key discogs
+   */
+  public function getIdsByName(string $name, string $type): array {
+    return [
+      "spotify" => $this->spotifyLookup->getIdByName($name, $type),
+    ];
+  }
+
+  /**
    * Search on spotify.
    */
-  public function search(String $text) {
+  public function search(string $text) {
     // @todo Look from the discogs API as well
     $type = 'artist';
     return $this->spotifyLookup->search($text, $type);

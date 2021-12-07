@@ -51,12 +51,10 @@ class SpotifyLookupService {
   /**
    * Finding all information about an artist/album/track/.
    *
-   * @param string $category
-   *   The category that the ID belongs to, either artists, albums or tracks
-   *
    * @param string $id
-   *   The spotify ID
-   *
+   *   The spotify ID.
+   * @param string $category
+   *   The category that the ID belongs to, either artists, albums or tracks.
    */
   public function idsearch($id, $category) {
     $auth = $this->authorization();
@@ -78,17 +76,19 @@ class SpotifyLookupService {
 
   }
 
-
   /**
    * Search in Spotify with a string.
    *
-   * @param String $text
-   *   The searched for text
-   *
-   * @param String $type
-   *   The category being searched in, either artist, album or track
+   * @param string $text
+   *   The searched for text.
+   * @param string $type
+   *   The category being searched in, either artist, album or track.
    */
-  public function search(String $text, String $type) {
+  private function searchByName(string $text, string $type) {
+    if ($text === "") {
+      return [];
+    }
+
     $auth = $this->authorization();
 
     try {
@@ -104,9 +104,39 @@ class SpotifyLookupService {
       return \Drupal::logger('spotify_client')->error($e);
     }
 
+    // Get only the values inside $response->*->items.
+    $results = [];
+    foreach ($response as $key => &$value) {
+      array_push($results, ...$value->items);
+    }
+
+    return $results;
+  }
+
+  /**
+   * The the spotify ID of an artist/album/track.
+   */
+  public function getIdByName(String $name, String $type) {
+    $results = $this->searchByName($name, $type);
+
+    foreach ($results as &$result) {
+      if ($name === $result->name) {
+        return $result->id;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Search for a song on spotify.
+   */
+  public function search(String $text, String $type) {
+    $items = $this->searchByName($text, $type);
+
     $name_list = [];
 
-    foreach ($response->artists->items as $item) {
+    foreach ($items as $item) {
       array_push($name_list, $item->name);
     }
     return $name_list;
