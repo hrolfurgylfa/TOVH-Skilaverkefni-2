@@ -14,9 +14,9 @@ class DiscogsLookupService {
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct(ConfigFactoryInterface $configFactory) {
+  public function __construct() {
     $this->client = \Drupal::httpClient();
-    $this->configFactory = $configFactory;
+    //$this->configFactory = $configFactory;
   }
 
   /**
