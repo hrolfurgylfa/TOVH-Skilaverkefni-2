@@ -65,10 +65,9 @@ class MusicSearchService {
   /**
    * Search on spotify.
    */
-  public function search(string $text) {
+  public function search(String $text, String $type) {
     // @todo Look from the discogs API as well
-    $type = 'artist';
+    //$type = 'artist';
     return $this->spotifyLookup->search($text, $type);
   }
-
 }

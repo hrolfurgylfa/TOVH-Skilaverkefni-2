@@ -1,13 +1,14 @@
 music_search.search_form:
-  path: '/music_search/search'
+  path: '/music_search/search/{autocomplete_type}'
   defaults:
     _title: 'Testing Search'
     _form: '\Drupal\music_search\Form\MusicSearchForm'
+    autocomplete_type: 'track'
   requirements:
     _permission: 'access content'
 
 music_search.search_form.autocomplete:
-  path: '/music_search/search_form/autocomplete'
+  path: '/music_search/search_form/autocomplete/{search_type}'
   defaults:
     _controller:  Drupal\music_search\Controller\MusicSearchController::searchFormAutocomplete
     _format: json
