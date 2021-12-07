@@ -2,6 +2,7 @@
 
 namespace Drupal\spotify_lookup;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
@@ -15,25 +16,27 @@ use GuzzleHttp\Exception\GuzzleException;
 class SpotifyLookupService {
 
   protected $client;
+  protected $configFactory;
 
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct() {
+  public function __construct(ConfigFactoryInterface $configFactory) {
     $this->client = \Drupal::httpClient();
+    $this->configFactory = $configFactory;
   }
 
   /**
    * Get authorization for requests from spotify.
    */
   private function authorization() {
-
+    $config = $this->configFactory->get("spotify_lookup.credentials");
     try {
       $authorization = $this->client->request('POST', 'https://accounts.spotify.com/api/token', [
         'form_params' => [
           'grant_type' => 'client_credentials',
-          'client_id' => 'be336bc6550f4ca09b1b867616f22ce3',
-          'client_secret' => '3cfcd4f611d247ae8bcb07da3f8d1f6e',
+          'client_id' => $config->get("spotify_client_id"),
+          'client_secret' => $config->get("spotify_client_secret"),
         ],
       ]);
 
@@ -78,7 +81,7 @@ class SpotifyLookupService {
     $auth = $this->authorization();
 
     try {
-      $request = $this->client->request('GET', 'https://api.spotify.com/v1/search?q=' . $text . '&type=' . $type, [
+      $request = $this->client->request('GET', 'https://api.spotify.com/v1/search?q=' . $text . '&type=' . $type . '&limit=10', [
         'headers' => [
           'Authorization' => $auth->token_type . ' ' . $auth->access_token,
         ],
@@ -91,9 +94,10 @@ class SpotifyLookupService {
     }
 
     $name_list = [];
-    foreach($response->artists->items as $item) {
+
+    foreach ($response->artists->items as $item) {
       array_push($name_list, $item->name);
-        }
+    }
     return $name_list;
   }
 
