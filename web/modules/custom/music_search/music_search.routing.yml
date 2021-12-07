@@ -7,7 +7,7 @@ music_search.search_form:
     _permission: 'access content'
 
 music_search.search_form.autocomplete:
-  path: '/music_search/search_form/autocomplete'
+  path: '/music_search/search_form/autocomplete/{search_type}'
   defaults:
     _controller:  Drupal\music_search\Controller\MusicSearchController::searchFormAutocomplete
     _format: json

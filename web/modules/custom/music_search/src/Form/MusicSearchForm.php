@@ -52,7 +52,23 @@ class MusicSearchForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('My Autocomplete'),
       '#autocomplete_route_name' => 'music_search.search_form.autocomplete',
+      '#autocomplete_route_parameters' => array('search_type' => 'artist'),
     ];
+
+    $form['search_type']['active'] = array(
+      '#type' => 'radios',
+      '#title' => $this
+        ->t('Search results'),
+      '#default_value' => 0,
+      '#options' => array(
+        0 => $this
+          ->t('Track'),
+        1 => $this
+          ->t('Artist'),
+        2 => $this
+          ->t('Album'),
+      ),
+    );
 
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [

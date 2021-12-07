@@ -44,10 +44,16 @@ class MusicSearchController extends ControllerBase {
    */
   public function searchFormAutocomplete(Request $request) {
     $input = $request->query->get('q');
-
-    $results = $this->musicSearch->search($input);
+    $searchType = $request->get('search_type');
+    $results = $this->musicSearch->search($input, $searchType);
 
     return new JsonResponse($results);
   }
 
+  /**
+   * Determine what type of search results the autocomplete should yield (track, artist or album).
+   */
+  public function getSearchResultType() {
+
+  }
 }
