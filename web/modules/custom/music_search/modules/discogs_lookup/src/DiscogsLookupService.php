@@ -78,8 +78,8 @@ class DiscogsLookupService {
   public function search(String $text, String $category) {
     $auth = $this->authorization();
 
-    if ($category == 'album') {
-      $category = 'release';
+    if ($category == 'albums') {
+      $category = 'releases';
     }
 
     try {
