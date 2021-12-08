@@ -55,6 +55,22 @@ class MusicSearchService {
   }
 
   /**
+   * Get an artist from Discogs.
+   */
+  public function getDiscogsArtist(String $id) {
+    return $this->discogsLookup->idsearch($id, 'artists');
+  }
+
+  /**
+   * Get an release from Discogs.
+   */
+  public function getDiscogsRelease(String $id) {
+    return $this->discogsLookup->idsearch($id, 'releases');
+  }
+
+
+
+  /**
    * Get the spotify and discogs IDs by the name of some artist/album/track.
    *
    * @param string $name
