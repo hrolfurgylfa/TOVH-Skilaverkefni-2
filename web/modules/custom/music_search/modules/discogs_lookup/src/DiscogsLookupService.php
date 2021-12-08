@@ -2,10 +2,11 @@
 
 namespace Drupal\discogs_lookup;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-
+/**
+ *
+ */
 class DiscogsLookupService {
 
   protected $client;
@@ -14,15 +15,13 @@ class DiscogsLookupService {
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct(ConfigFactoryInterface $configFactory) {
+  public function __construct() {
     $this->client = \Drupal::httpClient();
-    $this->configFactory = $configFactory;
   }
 
   /**
    * Get authorization for requests from Discogs.
    */
-
   private function authorization() {
     return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe';
   }
@@ -31,13 +30,12 @@ class DiscogsLookupService {
    * Finding all information about an artist/release.
    *
    * @param string $category
-   *   The category that the ID belongs to, either artists or releases
+   *   The category that the ID belongs to, either artists or releases.
    *
    * @param string $id
-   *   The Discogs ID
+   *   The Discogs ID.
    *
    * @todo held að sé reddy - eftir að testa
-   *
    */
   public function idsearch($id, $category) {
     $auth = $this->authorization();
@@ -63,16 +61,14 @@ class DiscogsLookupService {
 
   }
 
-
   /**
    * Search in Discogs with a string.
    *
-   * @param String $text
-   *   The searched for text
+   * @param string $text
+   *   The searched for text.
    *
-   * @param String $category
+   * @param string $category
    *   The category to be searched. Discogs can only search for artists or albums.
-   *
    */
   public function search(String $text, String $category) {
     $auth = $this->authorization();

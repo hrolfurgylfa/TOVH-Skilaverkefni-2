@@ -48,6 +48,8 @@ class MusicSearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $type = \Drupal::routeMatch()->getParameter('autocomplete_type');
+
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['goToArtistSearch'] = [
       '#type' => 'submit',
@@ -64,15 +66,12 @@ class MusicSearchForm extends FormBase {
       '#value' => $this->t('Album search'),
       '#submit' => array([$this, 'goToAlbumSearch']),
     ];
-
-    $type = \Drupal::routeMatch()->getParameter('autocomplete_type');
     $form['article'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('My Autocomplete'),
+      '#title' => $this->t('Search for '.$type),
       '#autocomplete_route_name' => 'music_search.search_form.autocomplete',
       '#autocomplete_route_parameters' => array('search_type' => $type),
     ];
-
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),

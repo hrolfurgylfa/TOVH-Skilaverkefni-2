@@ -2,7 +2,6 @@
 
 namespace Drupal\music_search;
 
-use Drupal\discogs_lookup\DiscogsLookupService;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 
@@ -28,9 +27,9 @@ class MusicSearchService {
   /**
    * Construct the class with the dependencies injected by Drupal.
    */
-  public function __construct(SpotifyLookupService $spotifyLookup, DiscogsLookupService $discogsLookup) {
+  public function __construct(SpotifyLookupService $spotifyLookup) {
     $this->spotifyLookup = $spotifyLookup;
-    $this->discogsLookup = $discogsLookup;
+    // $this->discogsLookup = $discogsLookup;
   }
 
   /**
