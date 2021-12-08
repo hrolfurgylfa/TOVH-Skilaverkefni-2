@@ -90,7 +90,7 @@ class DiscogsLookupService {
 
 
     try {
-      $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category) . '&per_page=10', [
+      $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category) . '&per_page=50', [
         'headers' => [
           'Authorization' => $auth,
         ],
