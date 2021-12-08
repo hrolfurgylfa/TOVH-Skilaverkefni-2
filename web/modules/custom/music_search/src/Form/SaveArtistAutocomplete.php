@@ -5,7 +5,9 @@ namespace Drupal\music_search\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
 use Drupal\music_search\MusicSearchService;
+use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -45,45 +47,40 @@ class SaveArtistAutocomplete extends FormBase {
   }
 
   /**
-   *
+   * Help create radio or checkbox buttons that have a other textfield for other information.
    */
-  private function radioWithOther(array &$form, string $id, string $title, array $options, int $maxsize = 255, string $placeholder = "", $type = "radios") {
-    // Add the other option.
-    $options["other"] = t("Other");
+  private function radioWithOther(array &$form, string $id, array $field, array $other_textfield = NULL) {
 
-    // Radio buttons.
+    // Setup the field.
     $id_string = $id . "_select";
-    $form[$id_string] = [
-      '#type' => $type,
-      '#title' => $title,
-      '#options' => $options,
-      '#attributes' => [
-        'name' => $id_string,
-      ],
-    ];
+    $field["#attributes"] = ['name' => $id_string];
+    $field["#options"]["other"] = t("Other");
+    $form[$id_string] = $field;
 
     // Other textfield.
-    $other_textfield = [
-      '#type' => 'textfield',
-      '#attributes' => [
-        'id' => 'custom-' . $id,
-      ],
-      '#states' => [
-        'visible' => [
-          ':input[name="' . $id_string . '"]' => ['value' => 'other'],
-        ],
-      ],
+    if ($other_textfield === NULL) {
+      $other_textfield = ['#type' => 'textfield'];
+    }
+    $other_textfield["#attributes"] = ['id' => 'custom-' . $id];
+
+    // Make other work with other options if checkboxes are used.
+    $other_visible_condition = NULL;
+    if ($field["#type"] == "checkboxes") {
+      $other_visible_condition = [':input[id="edit-' . $id . '-select-other"]' => ["checked" => TRUE]];
+    }
+    else {
+      $other_visible_condition = [':input[name="' . $id_string . '"]' => ["value" => "other"]];
+    }
+    $other_textfield["#states"] = [
+      "visible" => $other_visible_condition,
     ];
 
-    // Optional function arguments.
-    if ($other_textfield) {
-      $other_textfield["#placeholder"] = $placeholder;
-    }
-    if ($maxsize) {
-      $other_textfield["#size"] = (string) $maxsize;
+    // Select other by default if radio buttons are used and other is the only one.
+    if (count($field["#options"]) === 1 && $field["#type"] === "radios") {
+      $form["#default_value"] = "other";
     }
 
-    $form['custom_' . $id] = $other_textfield;
+    $form["custom_" . $id] = $other_textfield;
   }
 
   /**
@@ -138,46 +135,78 @@ class SaveArtistAutocomplete extends FormBase {
     $names = $this->getAll(function ($item) {
       return $item->getName();
     }, $all_autofill_data);
-    $this->radioWithOther($form, "name", "Name", array_combine($names, $names));
+    $this->radioWithOther($form, "name", [
+      '#type' => "radios",
+      '#title' => "Name",
+      '#options' => array_combine($names, $names),
+      "#required" => TRUE,
+    ]);
 
     // Artist description.
     $descriptions = $this->getAll(function ($item) {
       return $item->getDescription();
     }, $all_autofill_data);
-    $this->radioWithOther($form, "description", "Description", array_combine($descriptions, $descriptions));
+    $this->radioWithOther($form, "description", [
+      '#type' => "radios",
+      '#title' => "Description",
+      '#options' => array_combine($descriptions, $descriptions),
+      "#required" => TRUE,
+    ]);
 
     // Artist image.
     $images = $this->getAll(function ($item) {
       return $item->getImageURL();
     }, $all_autofill_data);
-    $this->radioWithOther($form, "images", "Images", array_combine($images, $images));
+    $this->radioWithOther($form, "images", [
+      '#type' => "radios",
+      '#title' => "Images",
+      '#options' => array_combine($images, $images),
+      "#required" => TRUE,
+    ]);
 
     // Birth date.
     $images = $this->getAll(function ($item) {
-      return $item->getBirthDate();
+      return $item->getBirthDate()->format("Y - m - d");
     }, $all_autofill_data);
-    $this->radioWithOther($form, "birth_date", "Birth Date", array_combine($images, $images));
+    $this->radioWithOther($form, "birth_date", [
+      '#type' => "radios",
+      '#title' => "Birth Date",
+      '#options' => array_combine($images, $images),
+      "#required" => TRUE,
+    ], ["#type" => "date"]);
 
     // Death date.
     $images = $this->getAll(function ($item) {
       return $item->getDeathDate();
     }, $all_autofill_data);
-    $this->radioWithOther($form, "death_date", "Death Date", array_combine($images, $images));
+    $this->radioWithOther($form, "death_date", [
+      '#type' => "radios",
+      '#title' => "Death Date",
+      '#options' => array_combine($images, $images),
+      "#required" => TRUE,
+    ]);
 
     // Website link.
     $images = $this->getAll(function ($item) {
       return $item->getWebsiteLink();
     }, $all_autofill_data);
-    $this->radioWithOther($form, "website_link", "Website Link", array_combine($images, $images));
+    $this->radioWithOther($form, "website_link", [
+      '#type' => "radios",
+      '#title' => "Website Link",
+      '#options' => array_combine($images, $images),
+      "#required" => TRUE,
+    ], ["#type" => "link"]);
 
     // Genres.
     $genres = $this->getAll(function ($item) {
       return $item->getGenres();
     }, $all_autofill_data);
-    $genres_strings = array_map(function ($item) {
-      return implode(", ", $item);
-    }, $genres);
-    $this->radioWithOther($form, "genres", "Genres", array_combine($genres_strings, $genres_strings));
+    $flat_genres = array_merge(...$genres);
+    $this->radioWithOther($form, "genres", [
+      '#type' => "checkboxes",
+      '#title' => "Genres",
+      '#options' => array_combine($flat_genres, $flat_genres),
+    ]);
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -196,6 +225,7 @@ class SaveArtistAutocomplete extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
     $images = $this->getRadioWithOther($form_state, "images");
@@ -203,8 +233,42 @@ class SaveArtistAutocomplete extends FormBase {
     $death_date = $this->getRadioWithOther($form_state, "death_date");
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
-    $a = "a";
-    // @todo Save artist.
+
+    // Create the media.
+    $image_path = $images;
+    $image_name = end(explode("/", $image_path));
+    $has_extension = str_contains($image_name, ".");
+    $with_extension = $has_extension ? $image_name : $image_name . ".jpeg";
+    $destination = \Drupal::config('system.file')->get('default_scheme') . '://' . basename($with_extension);
+
+    $file_data = file_get_contents($images);
+    $file = file_save_data($file_data, $destination);
+    $media = Media::create([
+      'bundle' => 'image',
+      'uid' => \Drupal::currentUser()->id(),
+      'field_media_image' => [
+        'target_id' => $file->id(),
+      ],
+    ]);
+    $media->setName("Temp")
+      ->setPublished(TRUE)
+      ->save();
+
+    // Create the content.
+    $node = Node::create([
+      "type" => "artist",
+      "title" => $name,
+      "status" => Node::PUBLISHED,
+      "field_description" => $description,
+      "field_band_members" => [],
+      "field_birth_date" => (new \DateTime())->format("Y-m-d"),
+      "field_death_date" => (new \DateTime())->format("Y-m-d"),
+      "field_images_media" => [$media],
+      "field_website" => $website_link,
+      "field_mus" => [],
+    ]);
+    $node->save();
+    $c = "c";
   }
 
   /**
