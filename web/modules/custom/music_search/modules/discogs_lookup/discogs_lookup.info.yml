@@ -1,0 +1,8 @@
+name: Discogs Lookup
+description: Lookup data on Discogs
+type: module
+core_version_requirement: ^9 || ^10
+package: Custom
+dependencies:
+  - drupal:system (>= 9.1)
+configure: discogs_lookup.configuration

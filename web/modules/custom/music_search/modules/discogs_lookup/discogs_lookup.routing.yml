@@ -1,0 +1,7 @@
+discogs_lookup.configuration:
+  path: /admin/config/discogs-configuration
+  defaults:
+    _form: \Drupal\discogs_lookup\Form\DiscogsConfigurationForm
+    _title: Discogs Configuration
+  requirements:
+    _permission: administer site configuration

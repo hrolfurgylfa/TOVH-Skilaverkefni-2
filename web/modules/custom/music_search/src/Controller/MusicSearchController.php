@@ -36,6 +36,8 @@ class MusicSearchController extends ControllerBase {
     );
   }
 
+
+
   /**
    * Provide autocomplete for records.
    *

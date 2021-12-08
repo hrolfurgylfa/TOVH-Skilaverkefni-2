@@ -16,33 +16,14 @@ class DiscogsLookupService {
    */
   public function __construct() {
     $this->client = \Drupal::httpClient();
-    //$this->configFactory = $configFactory;
   }
 
   /**
    * Get authorization for requests from Discogs.
    */
 
-  // @todo Laga authorization
   private function authorization() {
-    //$config = $this->configFactory->get("spotify_lookup.credentials");
-    try {
-      $authorization = $this->client->request('POST', 'https://api.discogs.com/oauth/access_token', [
-        'form_params' => [
-          'grant_type' => 'client_credentials',
-          //'client_id' => $config->get("spotify_client_id"),
-          //'client_secret' => $config->get("spotify_client_secret"),
-          'client_id' => 'LpTpaWmlVDeUZRLzuUMp',
-          'client_secret' => 'mazzaUZJQLAGLzjEIyRQGOfoImkfpdvc',
-        ],
-      ]);
-
-      return json_decode($authorization->getBody());
-    }
-    catch (GuzzleException $e) {
-      return \Drupal::logger('discogs_client')->error($e);
-    }
-
+    return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe'
   }
 
   /**
@@ -67,7 +48,7 @@ class DiscogsLookupService {
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/' . $category . '/' . $id, [
         'headers' => [
-          'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+          'Authorization' => $auth,
         ],
       ]);
 
@@ -102,7 +83,7 @@ class DiscogsLookupService {
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category), [
         'headers' => [
-          'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+          'Authorization' => $auth,
         ],
       ]);
 
