@@ -81,7 +81,7 @@ class DiscogsLookupService {
     $auth = $this->authorization();
 
     if ($category == 'album') {
-      $category = 'releases';
+      $category = 'release';
     }
 
     if ($category == 'track') {
@@ -90,7 +90,7 @@ class DiscogsLookupService {
 
 
     try {
-      $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category), [
+      $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category) . '&per_page=50', [
         'headers' => [
           'Authorization' => $auth,
         ],

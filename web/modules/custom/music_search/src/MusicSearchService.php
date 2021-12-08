@@ -4,6 +4,7 @@ namespace Drupal\music_search;
 
 use Drupal\discogs_lookup\DiscogsLookupService;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
+use Drupal\music_search\Adapter\DiscogsArtistAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 
 /**
@@ -58,7 +59,7 @@ class MusicSearchService {
    * Get an artist from Discogs.
    */
   public function getDiscogsArtist(String $id) {
-    return $this->discogsLookup->idsearch($id, 'artists');
+    return new DiscogsArtistAdapter($this->discogsLookup->idsearch($id, 'artists'));
   }
 
   /**
@@ -95,6 +96,8 @@ class MusicSearchService {
     // @todo Look from the discogs API as well
     $discogsnames = $this->discogsLookup->search($text, $type);
     $spotifynames = $this->spotifyLookup->search($text, $type);
+    $test = $this->spotifyLookup->idsearch('4f7PUKUsyx2Ry02W1j9ymN', 'tracks');
+    $thos = $test;
     return $discogsnames;
   }
 
