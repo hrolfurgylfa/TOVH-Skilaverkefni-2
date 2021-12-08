@@ -1,4 +1,4 @@
 services:
-  spotify_lookup:
+  discogs_lookup:
     class: Drupal\discogs_lookup\DiscogsLookupService.php
     arguments: ["@config.factory"]

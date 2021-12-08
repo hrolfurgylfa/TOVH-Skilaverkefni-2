@@ -6,4 +6,5 @@ package: Custom
 dependencies:
   - drupal:system (>= 9.1)
   - spotify_lookup
+  - discogs_lookup
 configure: music_search.settings

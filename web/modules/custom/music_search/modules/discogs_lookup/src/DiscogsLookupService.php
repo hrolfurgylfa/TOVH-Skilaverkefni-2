@@ -14,8 +14,9 @@ class DiscogsLookupService {
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct() {
+  public function __construct(ConfigFactoryInterface $configFactory) {
     $this->client = \Drupal::httpClient();
+    $this->configFactory = $configFactory;
   }
 
   /**
@@ -23,7 +24,7 @@ class DiscogsLookupService {
    */
 
   private function authorization() {
-    return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe'
+    return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe';
   }
 
   /**
