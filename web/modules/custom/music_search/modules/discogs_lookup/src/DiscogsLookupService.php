@@ -81,7 +81,7 @@ class DiscogsLookupService {
     $auth = $this->authorization();
 
     if ($category == 'album') {
-      $category = 'releases';
+      $category = 'release';
     }
 
     if ($category == 'track') {
