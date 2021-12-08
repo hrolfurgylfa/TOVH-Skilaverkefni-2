@@ -16,15 +16,12 @@ class DiscogsLookupService {
    */
   public function __construct() {
     $this->client = \Drupal::httpClient();
-    //$this->configFactory = $configFactory;
-    //ConfigFactoryInterface $configFactory
   }
 
   /**
    * Get authorization for requests from Discogs.
    */
 
-  // @todo Laga authorization
   private function authorization() {
     return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe'
   }
@@ -51,7 +48,7 @@ class DiscogsLookupService {
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/' . $category . '/' . $id, [
         'headers' => [
-          'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+          'Authorization' => $auth,
         ],
       ]);
 
@@ -86,7 +83,7 @@ class DiscogsLookupService {
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category), [
         'headers' => [
-          'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+          'Authorization' => $auth,
         ],
       ]);
 
