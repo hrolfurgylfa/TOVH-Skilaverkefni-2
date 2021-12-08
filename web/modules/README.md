@@ -14,13 +14,17 @@ og Discogs svo hægt sé að fá upplýsingar frá þeim. Configurationið er vi
 far í Admin banner menu og "hover" yfir Configuration. Efst á þeim lista má sjá Spotify
 Configuration og Discogs Configuration. Þarf að fara inn í báða valmöguleika og skrá
 upplýsingar til að virkja módúluna.
+
 Ef þig vantar configuration, er þér boðið að nota þetta:
 
 Spotify Configuration
+
 Client ID = be336bc6550f4ca09b1b867616f22ce3
+
 Client secret = 3cfcd4f611d247ae8bcb07da3f8d1f6e
 
 Discogs Configuration
+
 Token = xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe
 
 
