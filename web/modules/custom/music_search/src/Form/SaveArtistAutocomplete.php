@@ -47,14 +47,14 @@ class SaveArtistAutocomplete extends FormBase {
   /**
    *
    */
-  private function radioWithOther(array &$form, string $id, string $title, array $options, int $maxsize = 255, string $placeholder = "") {
+  private function radioWithOther(array &$form, string $id, string $title, array $options, int $maxsize = 255, string $placeholder = "", $type = "radios") {
     // Add the other option.
     $options["other"] = t("Other");
 
     // Radio buttons.
     $id_string = $id . "_select";
     $form[$id_string] = [
-      '#type' => 'radios',
+      '#type' => $type,
       '#title' => $title,
       '#options' => $options,
       '#attributes' => [
@@ -100,6 +100,23 @@ class SaveArtistAutocomplete extends FormBase {
   }
 
   /**
+   * Get a specific parameter from all objects in a array.
+   */
+  protected function getAll(callable $get_data_func, array $data) {
+    $results = [];
+
+    foreach ($data as $item) {
+      $result = $get_data_func($item);
+
+      if ($result !== "" && $result !== NULL && (!is_array($result) || count($result) !== 0)) {
+        array_push($results, $result);
+      }
+    }
+
+    return $results;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state,) : array {
@@ -117,8 +134,50 @@ class SaveArtistAutocomplete extends FormBase {
       array_push($all_autofill_data, $this->musicSearchService->getSpotifyArtist($spotify_id));
     }
 
-    // Name.
-    $this->radioWithOther($form, "name", "Name", ["KIRA" => "KIRA", "LIRA" => "LIRA"]);
+    // Artist name.
+    $names = $this->getAll(function ($item) {
+      return $item->getName();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "name", "Name", array_combine($names, $names));
+
+    // Artist description.
+    $descriptions = $this->getAll(function ($item) {
+      return $item->getDescription();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "description", "Description", array_combine($descriptions, $descriptions));
+
+    // Artist image.
+    $images = $this->getAll(function ($item) {
+      return $item->getImageURL();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "images", "Images", array_combine($images, $images));
+
+    // Birth date.
+    $images = $this->getAll(function ($item) {
+      return $item->getBirthDate();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "birth_date", "Birth Date", array_combine($images, $images));
+
+    // Death date.
+    $images = $this->getAll(function ($item) {
+      return $item->getDeathDate();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "death_date", "Death Date", array_combine($images, $images));
+
+    // Website link.
+    $images = $this->getAll(function ($item) {
+      return $item->getWebsiteLink();
+    }, $all_autofill_data);
+    $this->radioWithOther($form, "website_link", "Website Link", array_combine($images, $images));
+
+    // Genres.
+    $genres = $this->getAll(function ($item) {
+      return $item->getGenres();
+    }, $all_autofill_data);
+    $genres_strings = array_map(function ($item) {
+      return implode(", ", $item);
+    }, $genres);
+    $this->radioWithOther($form, "genres", "Genres", array_combine($genres_strings, $genres_strings));
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -130,15 +189,22 @@ class SaveArtistAutocomplete extends FormBase {
     ];
 
     return $form;
+
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $radio_value = $form_state->getValue("test_field");
     $name = $this->getRadioWithOther($form_state, "name");
+    $description = $this->getRadioWithOther($form_state, "description");
+    $images = $this->getRadioWithOther($form_state, "images");
+    $birth_date = $this->getRadioWithOther($form_state, "birth_date");
+    $death_date = $this->getRadioWithOther($form_state, "death_date");
+    $website_link = $this->getRadioWithOther($form_state, "website_link");
+    $genres = $this->getRadioWithOther($form_state, "genres");
     $a = "a";
+    // @todo Save artist.
   }
 
   /**

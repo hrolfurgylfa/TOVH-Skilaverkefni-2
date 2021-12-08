@@ -24,16 +24,16 @@ class SpotifyArtistAdapter implements IArtist {
   }
 
   public function getImageURL(): string {
-    if ($this->spotifyArtist->images->Length === 0) {
+    if (count($this->spotifyArtist->images) === 0) {
       return "";
     }
     else {
-      $this->spotifyArtist->images[0]->url;
+      return $this->spotifyArtist->images[0]->url;
     }
   }
 
   public function getWebsiteLink(): string {
-    return NULL;
+    return "";
   }
 
   public function getBirthDate(): ?\DateTime {

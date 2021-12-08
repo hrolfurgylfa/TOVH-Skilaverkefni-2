@@ -3,6 +3,7 @@
 namespace Drupal\music_search;
 
 use Drupal\discogs_lookup\DiscogsLookupService;
+use Drupal\music_search\Adapter\SpotifyArtistAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 
 /**
@@ -36,7 +37,7 @@ class MusicSearchService {
    * Get an artist from spotify.
    */
   public function getSpotifyArtist(String $id) {
-    return $this->spotifyLookup->idsearch($id, 'artists');
+    return new SpotifyArtistAdapter($this->spotifyLookup->idsearch($id, 'artists'));
   }
 
   /**
@@ -81,4 +82,5 @@ class MusicSearchService {
     $lvoe = $testingdis;
     return $this->spotifyLookup->search($text, $type);
   }
+
 }
