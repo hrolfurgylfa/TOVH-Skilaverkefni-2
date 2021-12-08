@@ -1,0 +1,7 @@
+spotify_lookup.admin:
+  title: 'Spotify Configuration'
+  description: 'Site for making configuration for Spotify'
+  parent: system.admin_config
+  route_name: spotify_lookup.configuration
+  weight: -100
+

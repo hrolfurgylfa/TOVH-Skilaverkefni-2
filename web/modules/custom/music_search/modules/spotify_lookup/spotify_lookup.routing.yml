@@ -5,3 +5,4 @@ spotify_lookup.configuration:
     _title: Spotify Configuration
   requirements:
     _permission: administer site configuration
+

@@ -1,0 +1,6 @@
+discogs_lookup.admin:
+  title: 'Discogs Configuration'
+  description: 'Site for making configuration for Discogs'
+  parent: system.admin_config
+  route_name: discogs_lookup.configuration
+  weight: -99

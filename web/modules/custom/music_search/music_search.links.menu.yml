@@ -1,6 +1,6 @@
 music_search.admin:
   title: 'Search and Create'
   description: 'example of how to make an admin settings page link'
-  parent: system.admin_config_development
+  parent: system.admin_content
   route_name: music_search.search_form
   weight: 100
