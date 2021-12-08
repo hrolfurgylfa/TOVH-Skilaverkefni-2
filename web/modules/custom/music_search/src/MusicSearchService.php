@@ -2,7 +2,6 @@
 
 namespace Drupal\music_search;
 
-use Drupal\discogs_lookup\DiscogsLookupService;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 
@@ -28,9 +27,9 @@ class MusicSearchService {
   /**
    * Construct the class with the dependencies injected by Drupal.
    */
-  public function __construct(SpotifyLookupService $spotifyLookup, DiscogsLookupService $discogsLookup) {
+  public function __construct(SpotifyLookupService $spotifyLookup) {
     $this->spotifyLookup = $spotifyLookup;
-    $this->discogsLookup = $discogsLookup;
+    // $this->discogsLookup = $discogsLookup;
   }
 
   /**
@@ -77,7 +76,7 @@ class MusicSearchService {
    */
   public function search(String $text, String $type) {
     // @todo Look from the discogs API as well
-    //$type = 'artist';
+    // $type = 'artist';
     $testingdis = $this->discogsLookup->search($text, $type);
     $lvoe = $testingdis;
     return $this->spotifyLookup->search($text, $type);
