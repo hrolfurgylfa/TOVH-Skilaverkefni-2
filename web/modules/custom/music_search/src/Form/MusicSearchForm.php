@@ -105,7 +105,7 @@ class MusicSearchForm extends FormBase {
     $type = "artist";
     $ids = $this->musicSearchService->getIdsByName($name, $type);
 
-    $response = new RedirectResponse(Url::fromRoute("<front>")->toString() . "?spotify=" . urlencode($ids["spotify"]));
+    $response = new RedirectResponse(Url::fromRoute("music_search.create." . $type)->toString() . "?spotify=" . urlencode($ids["spotify"]));
     $response->send();
   }
 
