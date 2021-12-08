@@ -23,7 +23,12 @@ class DiscogsLookupService {
    * Get authorization for requests from Discogs.
    */
   private function authorization() {
-    return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe';
+    $config = $this->configFactory->get('discogs_lookup.credentials');
+    $discogs_token = $config->get('token');
+
+    return 'Discogs token='.$discogs_token;
+
+    //return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe';
   }
 
   /**
