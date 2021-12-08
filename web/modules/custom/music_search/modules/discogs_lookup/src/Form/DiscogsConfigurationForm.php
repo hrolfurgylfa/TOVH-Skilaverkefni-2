@@ -37,7 +37,7 @@ class DiscogsConfigurationForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Discogs Token'),
       '#description' => $this->t('Please provide the Discogs Token you want to use.'),
-      '#default_value' => $config->get('Token'),
+      '#default_value' => $config->get('token'),
     ];
     return parent::buildForm($form, $form_state);
   }
