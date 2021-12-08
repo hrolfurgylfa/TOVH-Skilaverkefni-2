@@ -33,11 +33,11 @@ class SpotifyArtistAdapter implements IArtist {
   }
 
   public function getWebsiteLink(): string {
-    return "";
+    return "http://example.com";
   }
 
   public function getBirthDate(): ?\DateTime {
-    return NULL;
+    return new \DateTime();
   }
 
   public function getDeathDate(): ?\DateTime {
