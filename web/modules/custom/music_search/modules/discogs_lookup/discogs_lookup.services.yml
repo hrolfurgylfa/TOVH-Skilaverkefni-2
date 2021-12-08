@@ -1,4 +1,4 @@
 services:
   discogs_lookup:
-    class: Drupal\discogs_lookup\DiscogsLookupService.php
+    class: Drupal\discogs_lookup\DiscogsLookupService
     arguments: ["@config.factory"]

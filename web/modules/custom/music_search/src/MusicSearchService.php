@@ -77,10 +77,9 @@ class MusicSearchService {
    */
   public function search(String $text, String $type) {
     // @todo Look from the discogs API as well
-    //$type = 'artist';
-    $testingdis = $this->discogsLookup->search($text, $type);
-    $lvoe = $testingdis;
-    return $this->spotifyLookup->search($text, $type);
+    $discogsnames = $this->discogsLookup->search($text, $type);
+    $spotifynames = $this->spotifyLookup->search($text, $type);
+    return $discogsnames;
   }
 
 }

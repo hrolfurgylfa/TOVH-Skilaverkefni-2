@@ -96,8 +96,8 @@ class DiscogsLookupService {
 
     $name_list = [];
 
-    foreach ($response->artists->items as $item) {
-      array_push($name_list, $item->name);
+    foreach ($response->results as $item) {
+      array_push($name_list, $item->title);
     }
     return $name_list;
   }
