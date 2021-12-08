@@ -196,9 +196,15 @@ class SaveArtistAutocomplete extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $radio_value = $form_state->getValue("test_field");
     $name = $this->getRadioWithOther($form_state, "name");
+    $description = $this->getRadioWithOther($form_state, "description");
+    $images = $this->getRadioWithOther($form_state, "images");
+    $birth_date = $this->getRadioWithOther($form_state, "birth_date");
+    $death_date = $this->getRadioWithOther($form_state, "death_date");
+    $website_link = $this->getRadioWithOther($form_state, "website_link");
+    $genres = $this->getRadioWithOther($form_state, "genres");
     $a = "a";
+    // @todo Save artist.
   }
 
   /**
