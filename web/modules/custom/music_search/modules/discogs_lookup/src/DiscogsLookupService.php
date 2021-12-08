@@ -2,6 +2,7 @@
 
 namespace Drupal\discogs_lookup;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
@@ -15,8 +16,9 @@ class DiscogsLookupService {
   /**
    * Construct the service and add the HTTP client.
    */
-  public function __construct() {
+  public function __construct(ConfigFactoryInterface $configFactory) {
     $this->client = \Drupal::httpClient();
+    $this->configFactory = $configFactory;
   }
 
   /**
