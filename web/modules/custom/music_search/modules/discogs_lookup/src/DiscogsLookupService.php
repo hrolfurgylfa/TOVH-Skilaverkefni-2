@@ -80,9 +80,14 @@ class DiscogsLookupService {
   public function search(String $text, String $category) {
     $auth = $this->authorization();
 
-    if ($category == 'albums') {
+    if ($category == 'album') {
       $category = 'releases';
     }
+
+    if ($category == 'track') {
+      return [];
+    }
+
 
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category), [
