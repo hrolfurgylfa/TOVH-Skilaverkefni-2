@@ -73,13 +73,13 @@ class DiscogsLookupService {
       return [];
     }
 
-    if ($category == 'track') {
+    if ($category === 'track') {
       return [];
     }
 
     $auth = $this->authorization();
 
-    if ($category == 'album') {
+    if ($category === 'album') {
       $category = 'release';
     }
 
@@ -98,6 +98,7 @@ class DiscogsLookupService {
 
     // Get only the values
     $results = [];
+
     foreach ($response->results as $value) {
       array_push($results, $value);
     }

@@ -89,7 +89,7 @@ class MusicSearchService {
    */
   public function getIdsByName(string $name, string $type): array {
     $discogstype = "";
-    if ($type = 'albums' or $type = 'tracks') {
+    if ($type === 'albums' or $type === 'tracks') {
       $discogstype = 'releases';
     }
 
