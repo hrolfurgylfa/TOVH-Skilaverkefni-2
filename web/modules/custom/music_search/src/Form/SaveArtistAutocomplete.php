@@ -115,17 +115,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       '#options' => array_combine($flat_genres, $flat_genres),
     ]);
 
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Save'),
-    ];
-
-    return $form;
-
+    return parent::buildForm($form, $form_state);
   }
 
   /**
