@@ -55,6 +55,10 @@ class SaveArtistAutocomplete extends FormBase {
     $id_string = $id . "_select";
     $field["#attributes"] = ['name' => $id_string];
     $field["#options"]["other"] = t("Other");
+    if ($field["#options"]["anime rock"] !== NULL) {
+      unset($field["#options"]["anime rock"]);
+      $field["#options"]["anime-rock"] = "anime rock";
+    }
     $form[$id_string] = $field;
 
     // Other textfield.
@@ -65,19 +69,19 @@ class SaveArtistAutocomplete extends FormBase {
 
     // Make other work with other options if checkboxes are used.
     $other_visible_condition = NULL;
-    if ($field["#type"] == "checkboxes") {
-      $other_visible_condition = [':input[id="edit-' . $id . '-select-other"]' => ["checked" => TRUE]];
-    }
-    else {
-      $other_visible_condition = [':input[name="' . $id_string . '"]' => ["value" => "other"]];
-    }
+    // If ($field["#type"] == "checkboxes") {
+    //   $other_visible_condition = [':input[id="edit-' . $id . '-select-other"]' => ["checked" => TRUE]];
+    // }
+    // else {.
+    $other_visible_condition = [':input[name="' . $id_string . '"]' => ["value" => "other"]];
+    // }
     $other_textfield["#states"] = [
       "visible" => $other_visible_condition,
     ];
 
     // Select other by default if radio buttons are used and other is the only one.
     if (count($field["#options"]) === 1 && $field["#type"] === "radios") {
-      $form["#default_value"] = "other";
+      $form[$id_string]["#default_value"] = "other";
     }
 
     $form["custom_" . $id] = $other_textfield;
@@ -119,14 +123,11 @@ class SaveArtistAutocomplete extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state,) : array {
     $spotify_id = \Drupal::request()->query->get("spotify");
     $discogs_id = \Drupal::request()->query->get("discogs");
-
     if (!$spotify_id && !$discogs_id) {
       $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
       $res->send();
     }
-
     $all_autofill_data = [];
-
     if ($spotify_id) {
       array_push($all_autofill_data, $this->musicSearchService->getSpotifyArtist($spotify_id));
     }
@@ -187,15 +188,15 @@ class SaveArtistAutocomplete extends FormBase {
     ]);
 
     // Website link.
-    $images = $this->getAll(function ($item) {
+    $website_link = $this->getAll(function ($item) {
       return $item->getWebsiteLink();
     }, $all_autofill_data);
     $this->radioWithOther($form, "website_link", [
       '#type' => "radios",
       '#title' => "Website Link",
-      '#options' => array_combine($images, $images),
+      '#options' => array_combine($website_link, $website_link),
       "#required" => TRUE,
-    ], ["#type" => "link"]);
+    ]);
 
     // Genres.
     $genres = $this->getAll(function ($item) {
@@ -203,7 +204,7 @@ class SaveArtistAutocomplete extends FormBase {
     }, $all_autofill_data);
     $flat_genres = array_merge(...$genres);
     $this->radioWithOther($form, "genres", [
-      '#type' => "checkboxes",
+      '#type' => "radios",
       '#title' => "Genres",
       '#options' => array_combine($flat_genres, $flat_genres),
     ]);
