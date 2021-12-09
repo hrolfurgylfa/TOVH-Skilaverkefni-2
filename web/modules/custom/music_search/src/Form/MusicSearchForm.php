@@ -112,7 +112,8 @@ class MusicSearchForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $name = $form_state->getValue("article");
-    $type = "artist";
+    //$type = "artist";
+    $type = \Drupal::routeMatch()->getParameter('autocomplete_type');
     $ids = $this->musicSearchService->getIdsByName($name, $type);
 
     $response = new RedirectResponse(Url::fromRoute("music_search.create." . $type)->toString() . "?" . http_build_query($ids));
