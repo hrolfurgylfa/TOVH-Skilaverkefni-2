@@ -101,7 +101,7 @@ class SaveArtistAutocomplete extends FormBase {
   /**
    *
    */
-  private function getRadioWithOther(FormStateInterface $form_state, string $id): string {
+  private function getRadioWithOther(FormStateInterface $form_state, string $id) {
     $radio_value = $form_state->getValue($id . "_select");
     if ($radio_value !== "other") {
       return $radio_value;
@@ -369,7 +369,6 @@ class SaveArtistAutocomplete extends FormBase {
       "field_mus" => $genre_terms,
       "field_discogs_id" => $discogs_id,
       "field_spotify_id" => $spotify_id,
-      
     ]);
     $node->save();
     $c = "c";
