@@ -52,14 +52,24 @@ class SaveArtistAutocomplete extends FormBase {
    */
   private function radioWithOther(array &$form, string $id, array $field, array $other_textfield = NULL) {
 
+    // Remove spaces from options field.
+    $keys_to_clean = [];
+    foreach ($field["#options"] as $key) {
+      if (strstr($key, " ") !== FALSE) {
+        $keys_to_clean[] = $key;
+      }
+    }
+    foreach ($keys_to_clean as $key) {
+      $value = $field["#options"][$key];
+      unset($field["#options"][$key]);
+      $new_key = implode("_", explode(" ", $key));
+      $field["#options"][$new_key] = $value;
+    }
+
     // Setup the field.
     $id_string = $id . "_select";
     $field["#attributes"] = ['name' => $id_string];
     $field["#options"]["other"] = t("Other");
-    if ($field["#options"]["anime rock"] !== NULL) {
-      unset($field["#options"]["anime rock"]);
-      $field["#options"]["anime-rock"] = "anime rock";
-    }
     $form[$id_string] = $field;
 
     // Other textfield.
