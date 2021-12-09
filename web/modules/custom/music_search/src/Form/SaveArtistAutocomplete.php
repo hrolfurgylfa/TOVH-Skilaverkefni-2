@@ -162,9 +162,45 @@ class SaveArtistAutocomplete extends FormBase {
   }
 
   /**
+   *
+   */
+  protected function getOrCreateVocabularyTerms(array $term_names, string $vocabulary): array {
+    // Get the existing terms.
+    $query = \Drupal::entityQuery('taxonomy_term');
+    $query->condition('vid', $vocabulary);
+    $term_ids = $query->execute();
+    $terms = Term::loadMultiple($term_ids);
+
+    // Turn the existing terms into a associative array for better performance.
+    $dict_terms = [];
+    foreach ($terms as $term) {
+      $dict_terms[strtolower($term->getName())] = $term;
+    }
+
+    // Get or create the terms.
+    $return_terms = [];
+    foreach ($term_names as $term_name) {
+      $term = $dict_terms[strtolower($term_name)];
+
+      // Create them if needed.
+      if ($term === NULL) {
+        $term = Term::create([
+          "vid" => $vocabulary,
+          "name" => $term_name,
+        ]);
+      }
+
+      // Save the term to the return array.
+      $return_terms[] = $term;
+    }
+
+    return $return_terms;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state,) : array {
+  public function buildForm(array $form, FormStateInterface $form_state) : array {
     $spotify_id = \Drupal::request()->query->get("spotify");
     $discogs_id = \Drupal::request()->query->get("discogs");
     if (!$spotify_id && !$discogs_id) {
@@ -206,7 +242,7 @@ class SaveArtistAutocomplete extends FormBase {
       return $item->getImageURL();
     }, $all_autofill_data);
     $imagestuff = array_map(function ($item) {
-      return '<img src="'. $item . '" width="100" height="auto">';
+      return '<img src="' . $item . '" width="100" height="auto">';
     }, $images);
     $this->radioWithOther($form, "images", [
       '#type' => "radios",
@@ -307,27 +343,7 @@ class SaveArtistAutocomplete extends FormBase {
 
     // Create the selected genres terms.
     $genres = [$genres];
-    // Load the vocabulary terms.
-    $vocabulary_name = "music_genre";
-    $query = \Drupal::entityQuery('taxonomy_term');
-    $query->condition('vid', $vocabulary_name);
-    $term_ids = $query->execute();
-    $terms = Term::loadMultiple($term_ids);
-    $dict_terms = [];
-    foreach ($terms as $term) {
-      $dict_terms[strtolower($term->getName())] = $term;
-    }
-    $terms_on_object = [];
-    foreach ($genres as $genre) {
-      $term = $dict_terms[strtolower($genre)];
-      if ($term === NULL) {
-        $term = Term::create([
-          "vid" => $vocabulary_name,
-          "name" => $genre,
-        ]);
-      }
-      $terms_on_object[] = $term;
-    }
+    $genre_terms = $this->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
     $node = Node::create([
@@ -340,9 +356,10 @@ class SaveArtistAutocomplete extends FormBase {
       "field_death_date" => $death_date,
       "field_images_media" => [$media],
       "field_website" => $website_link,
-      "field_mus" => $terms_on_object,
+      "field_mus" => $genre_terms,
       "field_discogs_id" => $discogs_id,
       "field_spotify_id" => $spotify_id,
+      
     ]);
     $node->save();
     $c = "c";
