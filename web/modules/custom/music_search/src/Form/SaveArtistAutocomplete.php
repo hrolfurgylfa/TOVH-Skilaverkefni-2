@@ -237,7 +237,8 @@ class SaveArtistAutocomplete extends FormBase {
 
     // Create the media.
     $image_path = $images;
-    $image_name = end(explode("/", $image_path));
+    $stuff = explode("/", $image_path);
+    $image_name = end($stuff);
     $has_extension = str_contains($image_name, ".");
     $with_extension = $has_extension ? $image_name : $image_name . ".jpeg";
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://' . basename($with_extension);
