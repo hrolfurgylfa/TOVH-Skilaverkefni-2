@@ -1,7 +1,0 @@
-discogs_lookup.settings: # Þetta er held ég ekki í notkun, við þurfum að skoða
-  type: config_object    # að eyða þessu
-  label: 'Module settings'
-  mapping:
-    discogs_token:
-      type: string
-      label: 'Your discogs token'

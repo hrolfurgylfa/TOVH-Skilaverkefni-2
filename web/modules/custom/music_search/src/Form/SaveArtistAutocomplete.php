@@ -289,6 +289,8 @@ class SaveArtistAutocomplete extends FormBase {
     $death_date = $this->getRadioWithOther($form_state, "death_date");
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
+    $spotify_id = \Drupal::request()->query->get("spotify");
+    $discogs_id = \Drupal::request()->query->get("discogs");
 
     // Make sure there aren't any bad types that will crash the
     // generated entity.
@@ -339,6 +341,8 @@ class SaveArtistAutocomplete extends FormBase {
       "field_images_media" => [$media],
       "field_website" => $website_link,
       "field_mus" => $terms_on_object,
+      "field_discogs_id" => $discogs_id,
+      "field_spotify_id" => $spotify_id,
     ]);
     $node->save();
     $c = "c";

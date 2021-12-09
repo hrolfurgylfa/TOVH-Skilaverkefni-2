@@ -11,9 +11,7 @@ dependencies:
     - field.field.node.record.field_release_year
     - field.field.node.record.field_song
     - node.type.record
-    - workflows.workflow.edit_content
   module:
-    - content_moderation
     - media_library
     - path
 id: node.record.default
@@ -90,11 +88,13 @@ content:
     type: entity_reference_autocomplete
     region: content
   moderation_state:
-    type: moderation_state_default
-    weight: 100
-    settings: {  }
-    region: content
+    weight: 128
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   path:
     type: path
     weight: 30
