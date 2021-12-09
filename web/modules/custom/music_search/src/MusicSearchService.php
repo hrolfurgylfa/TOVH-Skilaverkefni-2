@@ -4,9 +4,9 @@ namespace Drupal\music_search;
 
 use Drupal\discogs_lookup\DiscogsLookupService;
 use Drupal\music_search\Adapter\DiscogsAlbumAdapter;
+use Drupal\music_search\Adapter\DiscogsArtistAdapter;
 use Drupal\music_search\Adapter\SpotifyAlbumAdapter;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
-use Drupal\music_search\Adapter\DiscogsArtistAdapter;
 use Drupal\music_search\Adapter\SpotifyTrackAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 use Symfony\Component\Validator\Constraints\IsFalse;
@@ -88,9 +88,14 @@ class MusicSearchService {
    *   ID under the key discogs
    */
   public function getIdsByName(string $name, string $type): array {
+    $discogstype = "";
+    if ($type = 'albums' or $type = 'tracks') {
+      $discogstype = 'releases';
+    }
+
     return [
       "spotify" => $this->spotifyLookup->getIdByName($name, $type),
-      "discogs" => $this->discogsLookup->getIdByName($name, $type),
+      "discogs" => $this->discogsLookup->getIdByName($name, $discogstype),
     ];
   }
 
