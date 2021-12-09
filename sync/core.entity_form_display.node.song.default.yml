@@ -6,9 +6,7 @@ dependencies:
     - field.field.node.song.field_length
     - field.field.node.song.field_spotify
     - node.type.song
-    - workflows.workflow.edit_content
   module:
-    - content_moderation
     - duration_field
     - path
 id: node.song.default
@@ -37,11 +35,13 @@ content:
     type: string_textfield
     region: content
   moderation_state:
-    type: moderation_state_default
-    weight: 100
-    settings: {  }
-    region: content
+    weight: 125
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   path:
     type: path
     weight: 30
