@@ -132,6 +132,9 @@ class SaveArtistAutocomplete extends FormBase {
     if ($spotify_id) {
       array_push($all_autofill_data, $this->musicSearchService->getSpotifyArtist($spotify_id));
     }
+    if ($discogs_id) {
+      array_push($all_autofill_data, $this->musicSearchService->getDiscogsArtist($discogs_id));
+    }
 
     // Artist name.
     $names = $this->getAll(function ($item) {
@@ -168,12 +171,15 @@ class SaveArtistAutocomplete extends FormBase {
 
     // Birth date.
     $birth_date = $this->getAll(function ($item) {
-      return $item->getBirthDate()->format("Y-m-d");
+      return $item->getBirthDate();
     }, $all_autofill_data);
+    $birth_date_str = array_map(function ($d) {
+      return $d->format("Y-m-d");
+    }, $birth_date);
     $this->radioWithOther($form, "birth_date", [
       '#type' => "radios",
       '#title' => "Birth Date",
-      '#options' => array_combine($birth_date, $birth_date),
+      '#options' => array_combine($birth_date_str, $birth_date_str),
       "#required" => TRUE,
     ], ["#type" => "date"]);
 
@@ -181,10 +187,13 @@ class SaveArtistAutocomplete extends FormBase {
     $death_date = $this->getAll(function ($item) {
       return $item->getDeathDate();
     }, $all_autofill_data);
+    $death_date_str = array_map(function ($d) {
+      return $d->format("Y-m-d");
+    }, $death_date);
     $this->radioWithOther($form, "death_date", [
       '#type' => "radios",
       '#title' => "Death Date",
-      '#options' => array_combine($death_date, $death_date),
+      '#options' => array_combine($death_date_str, $death_date_str),
       "#required" => TRUE,
     ], ["#type" => "date"]);
 

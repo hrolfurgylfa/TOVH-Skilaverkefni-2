@@ -109,7 +109,7 @@ class DiscogsLookupService {
     $results = $this->searchByName($name, $type);
 
     foreach ($results as &$result) {
-      if ($name === $result->name) {
+      if ($name === $result->title) {
         return $result->id;
       }
     }
