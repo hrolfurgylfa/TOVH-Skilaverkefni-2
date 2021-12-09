@@ -119,6 +119,49 @@ class SaveArtistAutocomplete extends FormBase {
   }
 
   /**
+   * Get the name of an image from it's URL, even if it doesn't have a file extension.
+   */
+  protected function getImageNameWithExtension(string $image_url): string {
+    $image_name = end(explode("/", $image_url));
+    $has_extension = str_contains($image_name, ".");
+    return $has_extension ? $image_name : $image_name . ".jpeg";
+  }
+
+  /**
+   * Save an image from a URL to the media library.
+   */
+  protected function saveImage(string $image_url, ?string $filename) {
+    // Get the filename if there is none provided.
+    if ($filename === NULL) {
+      $filename = end(explode("/", $image_url));
+    }
+
+    // Place to be stored.
+    $destination = \Drupal::config('system.file')->get('default_scheme') . '://' . basename($filename);
+
+    // Make image from link.
+    $file_data = file_get_contents($image_url);
+    $file = file_save_data($file_data, $destination);
+    $media = Media::create([
+      'bundle' => 'image',
+      'uid' => \Drupal::currentUser()->id(),
+      'field_media_image' => [
+        'target_id' => $file->id(),
+      ],
+    ]);
+
+    // Get the name without extension.
+    $filename_no_ext = explode(".", $filename)[0];
+
+    // Set to published.
+    $media->setName($filename_no_ext)
+      ->setPublished(TRUE)
+      ->save();
+
+    return $media;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state,) : array {
@@ -245,7 +288,7 @@ class SaveArtistAutocomplete extends FormBase {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
-    // Make sure there aren't any types that bad types that will crash the
+    // Make sure there aren't any bad types that will crash the
     // generated entity.
     if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE) {
       $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
@@ -255,24 +298,8 @@ class SaveArtistAutocomplete extends FormBase {
 
     // Create the media.
     $image_path = $images;
-    $stuff = explode("/", $image_path);
-    $image_name = end($stuff);
-    $has_extension = str_contains($image_name, ".");
-    $with_extension = $has_extension ? $image_name : $image_name . ".jpeg";
-    $destination = \Drupal::config('system.file')->get('default_scheme') . '://' . basename($with_extension);
-
-    $file_data = file_get_contents($images);
-    $file = file_save_data($file_data, $destination);
-    $media = Media::create([
-      'bundle' => 'image',
-      'uid' => \Drupal::currentUser()->id(),
-      'field_media_image' => [
-        'target_id' => $file->id(),
-      ],
-    ]);
-    $media->setName("Temp")
-      ->setPublished(TRUE)
-      ->save();
+    $image_name = $this->getImageNameWithExtension($image_path);
+    $media = $this->saveImage($image_path, $image_name);
 
     // Create the selected genres terms.
     $genres = [$genres];
