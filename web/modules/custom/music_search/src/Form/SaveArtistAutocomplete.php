@@ -197,7 +197,6 @@ class SaveArtistAutocomplete extends FormBase {
       '#type' => "radios",
       '#title' => "Death Date",
       '#options' => array_combine($death_date_str, $death_date_str),
-      "#required" => TRUE,
     ], ["#type" => "date"]);
 
     // Website link.
