@@ -33,6 +33,7 @@ class DiscogsLookupService {
     //return 'Discogs token=xKBaHLNYZNAXnqFvJJXCSgvEEjDChMlEbkbhsmAe';
   }
 
+
   /**
    * Finding all information about an artist/release.
    *
@@ -42,7 +43,6 @@ class DiscogsLookupService {
    * @param string $id
    *   The Discogs ID.
    *
-   * @todo held að sé reddy - eftir að testa
    */
   public function idsearch($id, $category) {
     $auth = $this->authorization();
@@ -68,26 +68,20 @@ class DiscogsLookupService {
 
   }
 
-  /**
-   * Search in Discogs with a string.
-   *
-   * @param string $text
-   *   The searched for text.
-   *
-   * @param string $category
-   *   The category to be searched. Discogs can only search for artists or albums.
-   */
-  public function search(String $text, String $category) {
-    $auth = $this->authorization();
-
-    if ($category == 'album') {
-      $category = 'release';
+  public function searchByName(string $text, string $category) {
+    if ($text === "") {
+      return [];
     }
 
     if ($category == 'track') {
       return [];
     }
 
+    $auth = $this->authorization();
+
+    if ($category == 'album') {
+      $category = 'release';
+    }
 
     try {
       $request = $this->client->request('GET', 'https://api.discogs.com/database/search?q=' . urlencode($text) . '&type=' . urlencode($category) . '&per_page=20', [
@@ -102,9 +96,42 @@ class DiscogsLookupService {
       return \Drupal::logger('discogs_client')->error($e);
     }
 
+    // Get only the values
+    $results = [];
+    foreach ($response->results as $value) {
+      array_push($results, $value);
+    }
+
+    return $results;
+  }
+
+  public function getIdByName($name, $type) {
+    $results = $this->searchByName($name, $type);
+
+    foreach ($results as &$result) {
+      if ($name === $result->name) {
+        return $result->id;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Search in Discogs with a string.
+   *
+   * @param string $text
+   *   The searched for text.
+   *
+   * @param string $category
+   *   The category to be searched. Discogs can only search for artists or albums.
+   */
+  public function search(String $text, String $category) {
+    $items = $this->searchByName($text, $category);
+
     $name_list = [];
 
-    foreach ($response->results as $item) {
+    foreach ($items as $item) {
       array_push($name_list, $item->title);
     }
     return $name_list;

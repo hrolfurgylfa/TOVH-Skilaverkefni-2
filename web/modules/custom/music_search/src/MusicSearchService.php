@@ -3,8 +3,11 @@
 namespace Drupal\music_search;
 
 use Drupal\discogs_lookup\DiscogsLookupService;
+use Drupal\music_search\Adapter\DiscogsAlbumAdapter;
+use Drupal\music_search\Adapter\SpotifyAlbumAdapter;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
 use Drupal\music_search\Adapter\DiscogsArtistAdapter;
+use Drupal\music_search\Adapter\SpotifyTrackAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
 use Symfony\Component\Validator\Constraints\IsFalse;
 
@@ -46,14 +49,14 @@ class MusicSearchService {
    * Get an album from spotify.
    */
   public function getSpotifyAlbum(String $id) {
-    return $this->spotifyLookup->idsearch($id, 'albums');
+    return new SpotifyAlbumAdapter($this->spotifyLookup->idsearch($id, 'albums'));
   }
 
   /**
    * Get a track from spotify.
    */
   public function getSpotifyTrack(String $id) {
-    return $this->spotifyLookup->idsearch($id, 'tracks');
+    return new SpotifyTrackAdapter($this->spotifyLookup->idsearch($id, 'tracks'));
   }
 
   /**
@@ -67,7 +70,7 @@ class MusicSearchService {
    * Get a release from Discogs.
    */
   public function getDiscogsRelease(String $id) {
-    return $this->discogsLookup->idsearch($id, 'releases');
+    return new DiscogsAlbumAdapter($this->discogsLookup->idsearch($id, 'releases'));
   }
 
 
@@ -87,6 +90,7 @@ class MusicSearchService {
   public function getIdsByName(string $name, string $type): array {
     return [
       "spotify" => $this->spotifyLookup->getIdByName($name, $type),
+      "discogs" => $this->discogsLookup->getIdByName($name, $type),
     ];
   }
 
