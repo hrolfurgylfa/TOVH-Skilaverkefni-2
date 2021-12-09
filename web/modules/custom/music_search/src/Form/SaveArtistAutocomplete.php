@@ -200,7 +200,7 @@ class SaveArtistAutocomplete extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state,) : array {
+  public function buildForm(array $form, FormStateInterface $form_state) : array {
     $spotify_id = \Drupal::request()->query->get("spotify");
     $discogs_id = \Drupal::request()->query->get("discogs");
     if (!$spotify_id && !$discogs_id) {
