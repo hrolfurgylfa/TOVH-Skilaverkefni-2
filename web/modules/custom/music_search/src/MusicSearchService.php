@@ -64,7 +64,7 @@ class MusicSearchService {
   }
 
   /**
-   * Get an release from Discogs.
+   * Get a release from Discogs.
    */
   public function getDiscogsRelease(String $id) {
     return $this->discogsLookup->idsearch($id, 'releases');
@@ -97,11 +97,13 @@ class MusicSearchService {
     // @todo Look from the discogs API as well
     $discogsnames = $this->discogsLookup->search($text, $type);
     $spotifynames = $this->spotifyLookup->search($text, $type);
-    
+
     $displaynames = [];
     foreach ($spotifynames as $name) {
       if (str_contains($name, ';')) {
         continue;
+      } elseif (in_array($name, $displaynames)) {
+        // Do nothing
       } else {
         array_push($displaynames, $name);
       }
