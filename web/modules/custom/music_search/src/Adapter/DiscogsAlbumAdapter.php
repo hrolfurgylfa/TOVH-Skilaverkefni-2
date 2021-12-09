@@ -16,17 +16,22 @@ class DiscogsAlbumAdapter implements IAlbum {
   }
 
   public function getName(): string {
-    return $this->discogsAlbum->name;
+    return $this->discogsAlbum->title;
   }
 
-  public function getArtistName(): string
+  public function getArtistsId(): array
   {
-    // TODO: Implement getArtistName() method.
-    return "";
+    $returnlist = [];
+    if (count($this->discogsAlbum->artists) >= 1) {
+      foreach ($this->discogsAlbum->artists as $artist) {
+        array_push($returnlist, $artist->id);
+      }
+    }
+    return $returnlist;
   }
 
   public function getDescription(): string {
-    return "";
+    return $this->discogsAlbum->notes;
   }
 
   public function getImageURL(): string {
@@ -34,17 +39,40 @@ class DiscogsAlbumAdapter implements IAlbum {
       return "";
     }
     else {
-      return $this->discogsAlbum->images[0]->url;
+      return $this->discogsAlbum->images[0]->uri;
     }
   }
 
   public function getTracks(): array
   {
-    return [];
+    $returnlist = [];
+    foreach ($this->discogsAlbum->tracklist as $track) {
+      array_push($returnlist, ["name"=>$track->title, "duration"=>$track->duration]);
+    }
+
+    return $returnlist;
+
   }
 
   public function getGenres(): array {
     return $this->discogsAlbum->genres;
+  }
+
+  public function getLabel(): array
+  {
+    $returnlist = [];
+    foreach ($this->discogsAlbum->labels as $label) {
+      array_push($returnlist, $label->name);
+    }
+    return $returnlist;
+  }
+
+  public function getReleaseDate(): int
+  {
+    $date = $this->discogsAlbum->released;
+    $year = substr($date, 0, 4);
+    $intyear = intval($year);
+    return $intyear;
   }
 
 }
