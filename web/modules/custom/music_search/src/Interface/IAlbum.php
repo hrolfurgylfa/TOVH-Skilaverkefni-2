@@ -7,10 +7,13 @@ namespace Drupal\music_search\Interface;
  */
 interface IAlbum {
   public function getName(): string;
-  public function getArtistName(): string;
+  public function getArtistsId(): array;
   public function getDescription(): string;
   public function getImageURL(): string;
   public function getTracks(): array;
   public function getGenres(): array;
+  public function getReleaseDate(): int;
+  public function getLabel(): array;
+
 
 }

@@ -19,10 +19,15 @@ class SpotifyAlbumAdapter implements IAlbum {
     return $this->spotifyAlbum->name;
   }
 
-  public function getArtistName(): string
+  public function getArtistsId(): array
   {
-    // TODO: Implement getArtistName() method.
-    return "";
+    $returnlist = [];
+    if (count($this->spotifyAlbum->artists) >= 1) {
+      foreach ($this->spotifyAlbum->artists as $artist) {
+        array_push($returnlist, $artist->id);
+      }
+    }
+    return $returnlist;
   }
 
   public function getDescription(): string {
@@ -40,11 +45,33 @@ class SpotifyAlbumAdapter implements IAlbum {
 
   public function getTracks(): array
   {
-    return [];
+    $returnlist = [];
+    if (count($this->spotifyAlbum->items) >= 1) {
+      foreach ($this->spotifyAlbum->items as $track) {
+        array_push($returnlist, $track->id);
+      }
+    }
+
+    return $returnlist;
+
   }
 
   public function getGenres(): array {
     return $this->spotifyAlbum->genres;
+  }
+
+  public function getLabel(): array
+  {
+    $labelarray = explode(' / ', $this->spotifyAlbum->label);
+    return $labelarray;
+  }
+
+  public function getReleaseDate(): int
+  {
+    $date = $this->spotifyAlbum->release_date;
+    $year = substr($date, 0, 4);
+    $intyear = intval($year);
+    return $intyear;
   }
 
 }

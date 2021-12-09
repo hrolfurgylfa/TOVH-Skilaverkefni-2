@@ -96,8 +96,6 @@ class MusicSearchService {
     // @todo Look from the discogs API as well
     $discogsnames = $this->discogsLookup->search($text, $type);
     $spotifynames = $this->spotifyLookup->search($text, $type);
-    $test = $this->spotifyLookup->idsearch('3JfSxDfmwS5OeHPwLSkrfr', 'albums');
-    $thos = $test;
     return $discogsnames;
   }
 
