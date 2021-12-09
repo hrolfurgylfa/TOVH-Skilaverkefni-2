@@ -53,18 +53,20 @@ class SaveArtistAutocomplete extends FormBase {
   private function radioWithOther(array &$form, string $id, array $field, array $other_textfield = NULL) {
 
     // Remove spaces from options field.
+    /*
     $keys_to_clean = [];
     foreach ($field["#options"] as $key) {
-      if (strstr($key, " ") !== FALSE) {
-        $keys_to_clean[] = $key;
-      }
+    if (strstr($key, " ") !== FALSE) {
+    $keys_to_clean[] = $key;
+    }
     }
     foreach ($keys_to_clean as $key) {
-      $value = $field["#options"][$key];
-      unset($field["#options"][$key]);
-      $new_key = implode("_", explode(" ", $key));
-      $field["#options"][$new_key] = $value;
+    $value = $field["#options"][$key];
+    unset($field["#options"][$key]);
+    $new_key = implode("_", explode(" ", $key));
+    $field["#options"][$new_key] = $value;
     }
+     */
 
     // Setup the field.
     $id_string = $id . "_select";
@@ -251,13 +253,13 @@ class SaveArtistAutocomplete extends FormBase {
     $images = $this->getAll(function ($item) {
       return $item->getImageURL();
     }, $all_autofill_data);
-    $imagestuff = array_map(function ($item) {
+    $image_html = array_map(function ($item) {
       return '<img src="' . $item . '" width="100" height="auto">';
     }, $images);
     $this->radioWithOther($form, "images", [
       '#type' => "radios",
       '#title' => "Images",
-      '#options' => array_combine($images, $imagestuff),
+      '#options' => array_combine($images, $image_html),
       "#required" => TRUE,
     ]);
 
