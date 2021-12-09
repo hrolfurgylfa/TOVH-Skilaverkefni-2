@@ -205,10 +205,13 @@ class SaveArtistAutocomplete extends FormBase {
     $images = $this->getAll(function ($item) {
       return $item->getImageURL();
     }, $all_autofill_data);
+    $imagestuff = array_map(function ($item) {
+      return '<img src="'. $item . '" width="100" height="auto">';
+    }, $images);
     $this->radioWithOther($form, "images", [
       '#type' => "radios",
       '#title' => "Images",
-      '#options' => array_combine($images, $images),
+      '#options' => array_combine($images, $imagestuff),
       "#required" => TRUE,
     ]);
 
@@ -237,7 +240,6 @@ class SaveArtistAutocomplete extends FormBase {
       '#type' => "radios",
       '#title' => "Death Date",
       '#options' => array_combine($death_date_str, $death_date_str),
-      "#required" => TRUE,
     ], ["#type" => "date"]);
 
     // Website link.
