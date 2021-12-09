@@ -3,9 +3,13 @@
 namespace Drupal\music_search;
 
 use Drupal\discogs_lookup\DiscogsLookupService;
+use Drupal\music_search\Adapter\DiscogsAlbumAdapter;
+use Drupal\music_search\Adapter\SpotifyAlbumAdapter;
 use Drupal\music_search\Adapter\SpotifyArtistAdapter;
 use Drupal\music_search\Adapter\DiscogsArtistAdapter;
+use Drupal\music_search\Adapter\SpotifyTrackAdapter;
 use Drupal\spotify_lookup\SpotifyLookupService;
+use Symfony\Component\Validator\Constraints\IsFalse;
 
 /**
  * Search functionality on spotify.
@@ -45,14 +49,14 @@ class MusicSearchService {
    * Get an album from spotify.
    */
   public function getSpotifyAlbum(String $id) {
-    return $this->spotifyLookup->idsearch($id, 'albums');
+    return new SpotifyAlbumAdapter($this->spotifyLookup->idsearch($id, 'albums'));
   }
 
   /**
    * Get a track from spotify.
    */
   public function getSpotifyTrack(String $id) {
-    return $this->spotifyLookup->idsearch($id, 'tracks');
+    return new SpotifyTrackAdapter($this->spotifyLookup->idsearch($id, 'tracks'));
   }
 
   /**
@@ -63,10 +67,10 @@ class MusicSearchService {
   }
 
   /**
-   * Get an release from Discogs.
+   * Get a release from Discogs.
    */
   public function getDiscogsRelease(String $id) {
-    return $this->discogsLookup->idsearch($id, 'releases');
+    return new DiscogsAlbumAdapter($this->discogsLookup->idsearch($id, 'releases'));
   }
 
 
@@ -86,6 +90,7 @@ class MusicSearchService {
   public function getIdsByName(string $name, string $type): array {
     return [
       "spotify" => $this->spotifyLookup->getIdByName($name, $type),
+      "discogs" => $this->discogsLookup->getIdByName($name, $type),
     ];
   }
 
@@ -96,7 +101,29 @@ class MusicSearchService {
     // @todo Look from the discogs API as well
     $discogsnames = $this->discogsLookup->search($text, $type);
     $spotifynames = $this->spotifyLookup->search($text, $type);
-    return $discogsnames;
+
+    $displaynames = [];
+    foreach ($spotifynames as $name) {
+      if (str_contains($name, ';')) {
+        continue;
+      } elseif (in_array($name, $displaynames)) {
+        // Do nothing
+      } else {
+        array_push($displaynames, $name);
+      }
+    }
+    foreach ($discogsnames as $name) {
+      if (preg_match('/^.*\([0-9]{1,3}\)$/m', $name) === 1) {
+        continue;
+      } elseif (str_contains($name, ';')) {
+        continue;
+      } elseif (in_array($name, $displaynames)) {
+        // Do nothing
+      } else {
+        array_push($displaynames, $name);
+      }
+    }
+    return array_slice($displaynames, 0, 10);
   }
 
 }
