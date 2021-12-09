@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\music_search\MusicSearchService;
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -166,26 +167,26 @@ class SaveArtistAutocomplete extends FormBase {
     ]);
 
     // Birth date.
-    $images = $this->getAll(function ($item) {
-      return $item->getBirthDate()->format("Y - m - d");
+    $birth_date = $this->getAll(function ($item) {
+      return $item->getBirthDate()->format("Y-m-d");
     }, $all_autofill_data);
     $this->radioWithOther($form, "birth_date", [
       '#type' => "radios",
       '#title' => "Birth Date",
-      '#options' => array_combine($images, $images),
+      '#options' => array_combine($birth_date, $birth_date),
       "#required" => TRUE,
     ], ["#type" => "date"]);
 
     // Death date.
-    $images = $this->getAll(function ($item) {
+    $death_date = $this->getAll(function ($item) {
       return $item->getDeathDate();
     }, $all_autofill_data);
     $this->radioWithOther($form, "death_date", [
       '#type' => "radios",
       '#title' => "Death Date",
-      '#options' => array_combine($images, $images),
+      '#options' => array_combine($death_date, $death_date),
       "#required" => TRUE,
-    ]);
+    ], ["#type" => "date"]);
 
     // Website link.
     $website_link = $this->getAll(function ($item) {
@@ -235,6 +236,14 @@ class SaveArtistAutocomplete extends FormBase {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
+    // Make sure there aren't any types that bad types that will crash the
+    // generated entity.
+    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE) {
+      $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
+      $res->send();
+      return;
+    }
+
     // Create the media.
     $image_path = $images;
     $image_name = end(explode("/", $image_path));
@@ -255,6 +264,30 @@ class SaveArtistAutocomplete extends FormBase {
       ->setPublished(TRUE)
       ->save();
 
+    // Create the selected genres terms.
+    $genres = [$genres];
+    // Load the vocabulary terms.
+    $vocabulary_name = "music_genre";
+    $query = \Drupal::entityQuery('taxonomy_term');
+    $query->condition('vid', $vocabulary_name);
+    $term_ids = $query->execute();
+    $terms = Term::loadMultiple($term_ids);
+    $dict_terms = [];
+    foreach ($terms as $term) {
+      $dict_terms[strtolower($term->getName())] = $term;
+    }
+    $terms_on_object = [];
+    foreach ($genres as $genre) {
+      $term = $dict_terms[strtolower($genre)];
+      if ($term === NULL) {
+        $term = Term::create([
+          "vid" => $vocabulary_name,
+          "name" => $genre,
+        ]);
+      }
+      $terms_on_object[] = $term;
+    }
+
     // Create the content.
     $node = Node::create([
       "type" => "artist",
@@ -262,11 +295,11 @@ class SaveArtistAutocomplete extends FormBase {
       "status" => Node::PUBLISHED,
       "field_description" => $description,
       "field_band_members" => [],
-      "field_birth_date" => (new \DateTime())->format("Y-m-d"),
-      "field_death_date" => (new \DateTime())->format("Y-m-d"),
+      "field_birth_date" => $birth_date,
+      "field_death_date" => $death_date,
       "field_images_media" => [$media],
       "field_website" => $website_link,
-      "field_mus" => [],
+      "field_mus" => $terms_on_object,
     ]);
     $node->save();
     $c = "c";
