@@ -60,29 +60,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
   }
 
   /**
-   *
-   */
-  protected function secondsToTimeArray(int $seconds): array {
-    $time_lengths = [60, 60, 24, 30, 12, INF];
-    $result = [];
-
-    // Loop through each time length and add a value that is less to the
-    // results.
-    $val = $seconds;
-    $i = -1;
-    while ($time_lengths[$i + 1] < $val) {
-      $i += 1;
-      $result[] = $val % $time_lengths[$i];
-      $val = (int) ($val / $time_lengths[$i]);
-    }
-
-    // Convert the seconds/minutes/hour/... array to a DateInterval.
-    $result[] = $val;
-    return $result;
-  }
-
-  /**
-   *
+   * Convert seconds to a balanced DateInterval object.
    */
   protected function secondsToDateInterval(int $seconds): \DateInterval {
     $interval = new \DateInterval("PT" . $seconds . "S");
