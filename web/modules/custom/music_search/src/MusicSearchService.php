@@ -99,14 +99,7 @@ class MusicSearchService {
     ];
   }
 
-  /**
-   * Search on spotify.
-   */
-  public function search(String $text, String $type) {
-    // @todo Look from the discogs API as well
-    $discogsnames = $this->discogsLookup->search($text, $type);
-    $spotifynames = $this->spotifyLookup->search($text, $type);
-
+  public function displaynames($spotifynames, $discogsnames) {
     $displaynames = [];
     foreach ($spotifynames as $name) {
       if (str_contains($name, ';')) {
@@ -128,7 +121,24 @@ class MusicSearchService {
         array_push($displaynames, $name);
       }
     }
+    return $displaynames;
+  }
+
+  /**
+   * Search on spotify and discogs.
+   */
+  public function search(String $text, String $type) {
+    $discogsnames = $this->discogsLookup->search($text, $type);
+    $spotifynames = $this->spotifyLookup->search($text, $type);
+    $displaynames = $this->displaynames($spotifynames, $discogsnames);
     return array_slice($displaynames, 0, 10);
+  }
+
+  public function search_name_img(String $text, String $type) {
+    $spotifynames = $this->spotifyLookup->search_choose($text, $type);
+    $discogsnames = $this->discogsLookup->search_choose($text, $type);
+
+    return ["discogsnames"=>array_slice($discogsnames, 0, 10), "spotifynames"=>array_slice($spotifynames, 0, 10)];
   }
 
 }
