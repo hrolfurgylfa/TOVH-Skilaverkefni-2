@@ -44,7 +44,7 @@ class DiscogsAlbumAdapter implements IAlbum {
   {
     $returnlist = [];
     foreach ($this->discogsAlbum->tracklist as $track) {
-      array_push($returnlist, ["name"=>$track->title, "duration"=>$track->duration]);
+      array_push($returnlist, $track->title);
     }
 
     return $returnlist;
