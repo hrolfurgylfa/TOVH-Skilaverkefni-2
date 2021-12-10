@@ -156,4 +156,14 @@ class ChooseFromOptions extends FormBase {
     return "music_search_choose_form";
   }
 
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    $spotifyname = $form_state->getValue("spotify_select");
+    $discogsname = $form_state->getValue("discogs_select");
+
+    if ($spotifyname === null && $discogsname === null) {
+      $form_state->setErrorByName('None selected', $this->t('You must select at least one artist.'));
+    }
+  }
+
 }
