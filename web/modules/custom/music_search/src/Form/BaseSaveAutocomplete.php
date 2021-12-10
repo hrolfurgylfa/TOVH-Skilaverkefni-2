@@ -269,9 +269,23 @@ abstract class BaseSaveAutocomplete extends FormBase {
   }
 
   /**
+   * Save the data from the form.
+   *
+   * This is essentially the same as submitForm but provides the ids from the
+   * services like spotify and discogs in a keyed array.
+   */
+  abstract public function saveData(array &$form, FormStateInterface $form_state, $ids);
+
+  /**
    * {@inheritdoc}
    */
-  abstract public function submitForm(array &$form, FormStateInterface $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $ids = [
+      "spotify" => \Drupal::request()->query->get("spotify"),
+      "discogs" => \Drupal::request()->query->get("discogs"),
+    ];
+    return $this->saveData($form, $form_state, $ids);
+  }
 
   /**
    * {@inheritdoc}

@@ -120,7 +120,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function saveData(array &$form, FormStateInterface $form_state, $ids) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
@@ -129,12 +129,10 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     $death_date = $this->getRadioWithOther($form_state, "death_date");
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
-    $spotify_id = \Drupal::request()->query->get("spotify");
-    $discogs_id = \Drupal::request()->query->get("discogs");
 
     // Make sure there aren't any bad types that will crash the
     // generated entity.
-    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE) {
+    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
       $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
       $res->send();
       return;
@@ -161,8 +159,8 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       "field_images_media" => [$media],
       "field_website" => $website_link,
       "field_mus" => $genre_terms,
-      "field_discogs_id" => $discogs_id,
-      "field_spotify_id" => $spotify_id,
+      "field_discogs_id" => $ids->discogs,
+      "field_spotify_id" => $ids->spotify,
     ]);
     $node->save();
   }

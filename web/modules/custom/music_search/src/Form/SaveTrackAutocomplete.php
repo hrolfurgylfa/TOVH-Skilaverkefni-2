@@ -3,9 +3,8 @@
 namespace Drupal\music_search\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Drupal\music_search\Adapter\NullTrackAdapter;
 use Drupal\node\Entity\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form to handle article autocomplete.
@@ -13,18 +12,23 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class SaveTrackAutocomplete extends BaseSaveAutocomplete {
 
   /**
+   * {@inheritDoc}
+   */
+  protected function getSpotifyData($spotify_id) {
+    return $this->musicSearchService->getSpotifyTrack($spotify_id);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function getDiscogsData($discogs_id) {
+    return new NullTrackAdapter();
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) : array {
-    $spotify_id = \Drupal::request()->query->get("spotify");
-    if (!$spotify_id) {
-      $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
-      $res->send();
-    }
-    $all_autofill_data = [];
-    if ($spotify_id) {
-      array_push($all_autofill_data, $this->musicSearchService->getSpotifyTrack($spotify_id));
-    }
+  protected function addFields(array $form, FormStateInterface $form_state, $all_autofill_data) {
 
     // Track name.
     $names = $this->getAll(function ($item) {
@@ -47,21 +51,15 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
       '#options' => array_combine($length, $length),
       "#required" => TRUE,
     ]);
-
-    return parent::buildForm($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function saveData(array &$form, FormStateInterface $form_state, $ids) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $length = $this->getRadioWithOther($form_state, "length");
-
-    $spotify_id = \Drupal::request()->query->get("spotify");
-
-
 
     // Create the content.
     $node = Node::create([
@@ -69,7 +67,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
       "title" => $name,
       "field_song_length" => $length,
       "status" => Node::PUBLISHED,
-      "field_spotify_id" => $spotify_id,
+      "field_spotify_id" => $ids->spotify,
     ]);
     $node->save();
   }
