@@ -19,15 +19,12 @@ class SpotifyAlbumAdapter implements IAlbum {
     return $this->spotifyAlbum->name;
   }
 
-  public function getArtistsId(): array
+  public function getArtistsId(): string
   {
-    $returnlist = [];
     if (count($this->spotifyAlbum->artists) >= 1) {
-      foreach ($this->spotifyAlbum->artists as $artist) {
-        array_push($returnlist, $artist->id);
-      }
+      return $this->spotifyAlbum->artists[0]->id;
     }
-    return $returnlist;
+    return '';
   }
 
   public function getDescription(): string {

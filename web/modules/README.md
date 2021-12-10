@@ -38,17 +38,19 @@ að listamanni eða plötu. Þegar þú byrjar að skrifa færðu uppástungur �
 þessir strengir koma frá Discogs og Spotify. Þegar þú hefur valið úr listanum, eða skrifað inn strenginn
 sem þú vilt leita að, þá getur þú ýtt á "enter" á lyklaborðinu eða ýtt á takkann "Next Step".
 
-Ef það er til ein niðurstaða sem passar nákvæmlega við það sem þú settir inn (Hástafir og lágstafir meðaltalið),
-þá ferðu beint á síðu sem spyr þig hvaða upplýsingar þú vilt nota fyrir hana. Ef það sem þú stimplar
-inn hefur fleiri en eina niðurstöðu færðu valmynd sem biður þig um að velja hvaða listamann/plötu/lag
-þú varst að meina. Þegar það er valið kemstu inn á create content síðuna.
+Ef það er til niðurstaða sem passar nákvæmlega við það sem þú settir inn (Hástafir og lágstafir meðaltalið),
+þá ferðu beint á síðu sem spyr þig hvaða upplýsingar þú vilt nota fyrir hana. Þetta getur komið ef þú velur niðurstöðu
+úr autocomplete listanum. Þá er niðustaða frá spotify, discogs eða báðum veitum sem passar fullkomnlega við það sem þú leitaðir að
+Ef það sem þú stimplar inn hefur fleiri en eina mögulega niðurstöðu færðu valmynd sem biður þig um að velja hvaða
+listamann/plötu/lag þú vilt vinna með. Hægt er að velja niðurstöður frá bæði spotify og discogs eða aðeins annarri veitunni.
+Ekki er hægt að komast áfram ef ekkert er valið. Þegar þú ert búin að velja kemstu inn á create content síðuna.
 
 Þegar þú er kominn með listamann, plötu eða lag sem þú ætlar að búa til færðu lista með mögulegum upplýsingum.
-Þessar upplýsingar koma frá bæði Spotify og Discogs og hér velur þú hvaða upplýsingar þú vilt nota. Ef sömu upplýsingar
-koma frá báðum veitum, til dæmis að listamaður heiti Jón Jónsson á báðum veitum, færðu aðeins einn valmöguleika.
+Þessar upplýsingar koma frá bæði Spotify og Discogs (ef bæði var valið) og hér velur þú hvaða upplýsingar þú vilt nota.
+Ef sömu upplýsingar koma frá báðum veitum, til dæmis að listamaður heiti Jón Jónsson á báðum veitum, færðu aðeins einn valmöguleika.
 Hinsvegar færðu alltaf valmöguleikann á að smella á "other" og skrifa það sem þú vilt.
-Hér þarf að athuga að ef þú til dæmis býrð til plötu, þá færðu aðeins valmöguleikann að tengja
-lög sem hafa þegar verið búin til við plötuna.
+
+Hér þarf að athuga að ef þú til dæmis býrð til plötu, þá færðu aðeins valmöguleikann að tengja lög sem hafa þegar verið búin til við plötuna.
 Þetta þýðir að upplýsingar sem ákveðin content týpa byggist á eins og lög, útgefendur, flytjendur og svo framvegis, þurfa
 að vera til svo að hægt sé að tengja það við content týpuna þegar hún er búin til.
 
