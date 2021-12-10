@@ -130,13 +130,6 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
-    // Make sure there aren't any bad types that will crash the
-    // generated entity.
-    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
-      $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
-      $res->send();
-      return;
-    }
 
     // Create the media.
     $image_path = $images;
@@ -170,6 +163,15 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
    */
   public function getFormId() {
     return "music_search_create_artist_from_search";
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    $website_link = $this->getRadioWithOther($form_state, "website_link");
+    $images = $this->getRadioWithOther($form_state, "images");
+    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
+      $form_state->setErrorByName('CreateArtistUrl', $this->t('Website link and images must be valid urls to create artist.'));
+    }
   }
 
 }
