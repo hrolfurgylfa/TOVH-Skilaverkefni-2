@@ -78,6 +78,33 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
+    // Tracks
+    $tracks = $this->getAll(function ($item) {
+      return $item->getTracks();}, $autofill_data);
+    $track_list = array_map(function ($item) {
+      return $item;
+    }, $tracks);
+    $flat_track_list = array_merge(...$track_list);
+    $neutral = array_map(function ($item) {
+      return trim($item);
+    }, $flat_track_list);
+    $unique_array = array_unique($neutral, SORT_STRING);
+    sort($unique_array);
+    $this->radioWithOther($form, "tracks", [
+      '#type' => "radios",
+      '#title' => "Tracks",
+      '#options' => array_combine($unique_array, $unique_array),
+      "#required" => TRUE,
+    ]);
+
+
+    $this->radioWithOther($form, "images", [
+      '#type' => "radios",
+      '#title' => "Images",
+      '#options' => array_combine($images, $image_html),
+      "#required" => TRUE,
+    ]);
+
 
     // Genres.
     $genres = $this->getAll(function ($item) {
