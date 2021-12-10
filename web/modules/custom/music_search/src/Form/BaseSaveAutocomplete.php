@@ -4,10 +4,12 @@ namespace Drupal\music_search\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\music_search\MusicSearchService;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form to handle article autocomplete.
@@ -207,10 +209,52 @@ abstract class BaseSaveAutocomplete extends FormBase {
   }
 
   /**
+   * Add the fields to insert the data about the thing being inserted.
+   */
+  abstract protected function addFields(array &$form, FormStateInterface $form_state, array $autofill_data);
+
+  /**
+   * Get the data from spotify.
+   */
+  abstract protected function getSpotifyData($spotify_id);
+
+  /**
+   * Get the data from discogs.
+   */
+  abstract protected function getDiscogsData($discogs_id);
+
+  /**
+   * Get all the autofill data for the form.
+   */
+  protected function getAutofillData() {
+    $spotify_id = \Drupal::request()->query->get("spotify");
+    $discogs_id = \Drupal::request()->query->get("discogs");
+    if (!$spotify_id && !$discogs_id) {
+      $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
+      $res->send();
+    }
+
+    $all_autofill_data = [];
+    if ($spotify_id) {
+      array_push($all_autofill_data, $this->getSpotifyData($spotify_id));
+    }
+    if ($discogs_id) {
+      array_push($all_autofill_data, $this->getDiscogsData($discogs_id));
+    }
+
+    return $all_autofill_data;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) : array {
 
+    $autofill_data = $this->getAutofillData();
+
+    $this->addFields($form, $form_state, $autofill_data);
+
+    // Add save button.
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -225,9 +269,23 @@ abstract class BaseSaveAutocomplete extends FormBase {
   }
 
   /**
+   * Save the data from the form.
+   *
+   * This is essentially the same as submitForm but provides the ids from the
+   * services like spotify and discogs in a keyed array.
+   */
+  abstract protected function saveData(array &$form, FormStateInterface $form_state, $ids);
+
+  /**
    * {@inheritdoc}
    */
-  abstract public function submitForm(array &$form, FormStateInterface $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $ids = [
+      "spotify" => \Drupal::request()->query->get("spotify"),
+      "discogs" => \Drupal::request()->query->get("discogs"),
+    ];
+    return $this->saveData($form, $form_state, $ids);
+  }
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Form to handle article autocomplete.
  */
-class SaveArtistAutocomplete extends BaseSaveAutocomplete {
+class SaveRecordAutocomplete extends BaseSaveAutocomplete {
 
   /**
    * {@inheritDoc}
