@@ -22,3 +22,11 @@ music_search.create.artist:
     _form:  \Drupal\music_search\Form\SaveArtistAutocomplete
   requirements:
     _permission: 'access content'
+
+music_search.choose.artist:
+  path: '/music_search/search/choose/artist'
+  defaults:
+    _title: Which do you want?
+    _form:  \Drupal\music_search\Form\ChooseFromOptions
+  requirements:
+    _permission: 'access content'

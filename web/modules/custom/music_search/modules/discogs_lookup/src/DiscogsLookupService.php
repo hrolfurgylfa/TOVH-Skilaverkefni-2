@@ -138,4 +138,15 @@ class DiscogsLookupService {
     return $name_list;
   }
 
+  public function search_choose(String $text, String $type) {
+    $items = $this->searchByName($text, $type);
+
+    $returnlist = [];
+    foreach ($items as $item) {
+      array_push($returnlist, ["name"=>$item->title, "img"=>$item->cover_image]);
+    }
+    return $returnlist;
+
+  }
+
 }

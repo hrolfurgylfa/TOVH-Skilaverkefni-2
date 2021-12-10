@@ -24,20 +24,29 @@ class DiscogsArtistAdapter implements IArtist {
   }
 
   public function getImageURL(): string {
-    if (count($this->discogsArtist->images) === 0) {
-      return "";
+    if (property_exists($this->discogsArtist, 'images')) {
+      if (count($this->discogsArtist->images) === 0) {
+        return "";
+      }
+      else {
+        return $this->discogsArtist->images[0]->uri;
+      }
     }
     else {
-      return $this->discogsArtist->images[0]->uri;
+      return '';
     }
   }
 
   public function getWebsiteLink(): string {
-    if (count($this->discogsArtist->urls) === 0) {
-      return "";
+    if (property_exists($this->discogsArtist, 'urls')) {
+      if (count($this->discogsArtist->urls) === 0) {
+        return "";
+      } else {
+        return $this->discogsArtist->urls[0];
+      }
     }
     else {
-      return $this->discogsArtist->urls[0];
+      return "";
     }
   }
 
