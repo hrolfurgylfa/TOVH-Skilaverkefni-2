@@ -50,7 +50,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
       '#title' => "Length",
       '#options' => array_combine($length, $length),
       "#required" => TRUE,
-    ]);
+    ], ["#type" => "duration"]);
   }
 
   /**
@@ -65,7 +65,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
     $node = Node::create([
       "type" => "song",
       "title" => $name,
-      "field_song_length" => $length,
+      "field_length" => $length,
       "status" => Node::PUBLISHED,
       "field_spotify_id" => $ids->spotify,
     ]);
