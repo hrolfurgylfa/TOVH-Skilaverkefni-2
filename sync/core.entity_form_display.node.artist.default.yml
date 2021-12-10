@@ -86,7 +86,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_spotify_id:
-    weight: 132
+    weight: 130
     settings:
       size: 60
       placeholder: ''

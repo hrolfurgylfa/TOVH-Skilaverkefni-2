@@ -5,11 +5,13 @@ dependencies:
   config:
     - field.field.node.record.field_cover_image
     - field.field.node.record.field_description
+    - field.field.node.record.field_discogs_id
     - field.field.node.record.field_music_genre
     - field.field.node.record.field_performer
     - field.field.node.record.field_publisher
     - field.field.node.record.field_release_year
     - field.field.node.record.field_song
+    - field.field.node.record.field_spotify_id
     - node.type.record
   module:
     - media_library
@@ -39,6 +41,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
+    region: content
+  field_discogs_id:
+    weight: 130
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   field_music_genre:
     weight: 127
@@ -86,6 +96,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_spotify_id:
+    weight: 129
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   moderation_state:
     weight: 128

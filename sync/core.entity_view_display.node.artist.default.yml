@@ -173,8 +173,24 @@ third_party_settings:
               id: 'extra_field_block:node:artist:links'
             additional: {  }
             weight: 7
-          376172a8-9476-41d3-870f-5e7ee43a5c01:
-            uuid: 376172a8-9476-41d3-870f-5e7ee43a5c01
+          54523983-2354-46b9-ae4d-8ed4b8230048:
+            uuid: 54523983-2354-46b9-ae4d-8ed4b8230048
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:artist:field_spotify_id'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 9
+          e6a3d670-481f-40d0-bbb6-c57884c56149:
+            uuid: e6a3d670-481f-40d0-bbb6-c57884c56149
             region: first
             configuration:
               label_display: '0'
@@ -189,22 +205,6 @@ third_party_settings:
                 type: string
             additional: {  }
             weight: 10
-          d3a48c41-4cb3-4e77-b610-9a948a0a51f2:
-            uuid: d3a48c41-4cb3-4e77-b610-9a948a0a51f2
-            region: first
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:artist:field_spotify_id'
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-            additional: {  }
-            weight: 11
         third_party_settings: {  }
       -
         layout_id: layout_onecol
@@ -281,7 +281,7 @@ content:
     type: entity_reference_label
     region: first
   field_spotify_id:
-    weight: 13
+    weight: 11
     label: above
     settings:
       link_to_entity: false

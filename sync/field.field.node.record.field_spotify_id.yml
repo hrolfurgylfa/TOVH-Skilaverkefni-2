@@ -1,14 +1,14 @@
-uuid: 5da5ddbc-360e-480f-b4e1-0d41504a6be2
+uuid: 201ef951-6b81-4464-95ce-1c69febab067
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_spotify_id
-    - node.type.artist
-id: node.artist.field_spotify_id
+    - node.type.record
+id: node.record.field_spotify_id
 field_name: field_spotify_id
 entity_type: node
-bundle: artist
+bundle: record
 label: 'Spotify ID'
 description: ''
 required: false

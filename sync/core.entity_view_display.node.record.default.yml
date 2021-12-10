@@ -5,11 +5,13 @@ dependencies:
   config:
     - field.field.node.record.field_cover_image
     - field.field.node.record.field_description
+    - field.field.node.record.field_discogs_id
     - field.field.node.record.field_music_genre
     - field.field.node.record.field_performer
     - field.field.node.record.field_publisher
     - field.field.node.record.field_release_year
     - field.field.node.record.field_song
+    - field.field.node.record.field_spotify_id
     - image.style.big_album_art
     - node.type.record
   module:
@@ -149,6 +151,38 @@ third_party_settings:
                 type: entity_reference_label
             additional: {  }
             weight: 2
+          6c9bf268-d2de-4ccf-8dad-5fdcd2a2c9c9:
+            uuid: 6c9bf268-d2de-4ccf-8dad-5fdcd2a2c9c9
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:record:field_spotify_id'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 3
+          4b34e8ae-5a8e-440c-8ddf-4389bbfc61c1:
+            uuid: 4b34e8ae-5a8e-440c-8ddf-4389bbfc61c1
+            region: first
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:record:field_discogs_id'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 4
         third_party_settings: {  }
       -
         layout_id: layout_onecol
@@ -207,6 +241,14 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
+  field_discogs_id:
+    weight: 9
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: first
   field_music_genre:
     weight: 7
     label: above
@@ -248,6 +290,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_spotify_id:
+    weight: 8
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: first
   links:
     weight: 0
     region: content

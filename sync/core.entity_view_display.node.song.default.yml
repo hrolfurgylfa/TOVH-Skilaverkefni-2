@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.song.field_length
-    - field.field.node.song.field_spotify
+    - field.field.node.song.field_spotify_id
     - node.type.song
   module:
     - duration_field
@@ -28,8 +28,8 @@ content:
     third_party_settings: {  }
     type: duration_human_display
     region: content
-  field_spotify:
-    weight: 2
+  field_spotify_id:
+    weight: 4
     label: above
     settings:
       link_to_entity: false
