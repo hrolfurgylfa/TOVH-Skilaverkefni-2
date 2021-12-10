@@ -43,9 +43,26 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     ]);
 
     // Artist of album
+
     $artists = $this->getAll(function ($item) {
       return $item->getArtistsId();
     }, $autofill_data);
+    $nids = [];
+    foreach ($artists as $artist) {
+      $theid = [];
+      $theid = \Drupal::entityQuery('node')->condition('type','artist')->condition('field_spotify_id', $artist)->execute();
+      if (count($theid) === 0) {
+        $theid = \Drupal::entityQuery('node')->condition('type','artist')->condition('field_discogs_id', $artist)->execute();
+      }
+      if (count($theid) !== 0) {
+        array_push($nids, $theid);
+      }
+    }
+
+    $flat_nids = array_merge(...$nids);
+    $nodes =  \Drupal\node\Entity\Node::loadMultiple($flat_nids);
+
+
     $this->radioWithOther($form, "artists", [
       '#type' => "radios",
       '#title' => "Artist",
