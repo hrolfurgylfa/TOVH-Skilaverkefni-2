@@ -87,7 +87,6 @@ class ChooseFromOptions extends FormBase {
       '#type' => 'radios',
       '#title' => $this->t('Pick From Spotify'),
       '#options' => array_combine($spotifynames, $spotifyninfo),
-      '#required' => TRUE,
     ];
 
     if ($type !== 'track') {
@@ -95,19 +94,19 @@ class ChooseFromOptions extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Pick From Discogs'),
         '#options' => array_combine($discogsnames, $discogsinfo),
-        '#required' => TRUE,
       ];
     }
+
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Create Content'),
+    ];
 
     $form['actions']['backToSearch'] = [
       '#type' => 'submit',
       '#value' => $this->t('Go Back To Search'),
       '#submit' => [[$this, 'goBackToSearch']],
-    ];
-
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Create Content'),
+      '#limit_validation_errors' => array(),
     ];
 
     return $form;
@@ -134,6 +133,12 @@ class ChooseFromOptions extends FormBase {
     if ($type === 'track') {
       $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
       $ids = ["spotify"=>$spoifyid];
+    } elseif ($spotifyname === null && $discogsname !== null) {
+      $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
+      $ids = ["discogs"=>$discogsid];
+    } elseif ($spotifyname !== null && $discogsname === null) {
+      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
+      $ids = ["spotify"=>$spoifyid];
     } else {
       $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
       $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
@@ -149,6 +154,16 @@ class ChooseFromOptions extends FormBase {
    */
   public function getFormId() {
     return "music_search_choose_form";
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    $spotifyname = $form_state->getValue("spotify_select");
+    $discogsname = $form_state->getValue("discogs_select");
+
+    if ($spotifyname === null && $discogsname === null) {
+      $form_state->setErrorByName('None selected', $this->t('You must select at least one artist.'));
+    }
   }
 
 }

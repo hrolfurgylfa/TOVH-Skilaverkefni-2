@@ -264,8 +264,24 @@ abstract class BaseSaveAutocomplete extends FormBase {
       '#value' => $this->t('Save'),
     ];
 
+    $form['actions']['backbutton'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Go Back'),
+      '#limit_validation_errors' => array(),
+      '#submit' => [[$this, 'goBack']],
+    ];
+
     return $form;
 
+  }
+
+  /**
+   *
+   */
+  public function goBack() {
+    $url = "https://tonlistavefur-islands.ddev.site/music_search/search";
+    $response = new RedirectResponse($url);
+    $response->send();
   }
 
   /**
