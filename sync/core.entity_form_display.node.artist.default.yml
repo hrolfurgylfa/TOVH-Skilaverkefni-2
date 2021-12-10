@@ -7,14 +7,14 @@ dependencies:
     - field.field.node.artist.field_birth_date
     - field.field.node.artist.field_death_date
     - field.field.node.artist.field_description
+    - field.field.node.artist.field_discogs_id
     - field.field.node.artist.field_images_media
     - field.field.node.artist.field_mus
+    - field.field.node.artist.field_spotify_id
     - field.field.node.artist.field_website
     - field.field.node.artist.layout_builder__layout
     - node.type.artist
-    - workflows.workflow.edit_content
   module:
-    - content_moderation
     - datetime
     - link
     - media_library
@@ -60,6 +60,14 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
+  field_discogs_id:
+    weight: 131
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_images_media:
     type: media_library_widget
     weight: 127
@@ -77,6 +85,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  field_spotify_id:
+    weight: 132
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_website:
     weight: 124
     settings:
@@ -86,11 +102,13 @@ content:
     type: link_default
     region: content
   moderation_state:
-    type: moderation_state_default
-    weight: 100
-    settings: {  }
-    region: content
+    weight: 129
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   path:
     type: path
     weight: 30

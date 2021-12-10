@@ -10,9 +10,7 @@ dependencies:
     - field.field.node.publisher.field_logo
     - field.field.node.publisher.field_website
     - node.type.publisher
-    - workflows.workflow.edit_content
   module:
-    - content_moderation
     - datetime
     - link
     - media_library
@@ -71,11 +69,13 @@ content:
     type: link_default
     region: content
   moderation_state:
-    type: moderation_state_default
-    weight: 6
-    settings: {  }
-    region: content
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   path:
     type: path
     weight: 5

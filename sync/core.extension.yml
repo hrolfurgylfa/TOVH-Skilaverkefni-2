@@ -13,13 +13,13 @@ module:
   comment: 0
   config: 0
   contact: 0
-  content_moderation: 0
   contextual: 0
   crop: 0
   ctools: 0
   datetime: 0
   dblog: 0
   devel: 0
+  discogs_lookup: 0
   duration_field: 0
   dynamic_page_cache: 0
   editor: 0
@@ -40,6 +40,7 @@ module:
   menu_link_content: 0
   menu_ui: 0
   module_filter: 0
+  music_search: 0
   node: 0
   options: 0
   page_cache: 0
@@ -49,6 +50,7 @@ module:
   rdf: 0
   search: 0
   shortcut: 0
+  spotify_lookup: 0
   system: 0
   taxonomy: 0
   text: 0
