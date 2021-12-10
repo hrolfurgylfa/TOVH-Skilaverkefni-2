@@ -22,3 +22,19 @@ music_search.create.artist:
     _form:  \Drupal\music_search\Form\SaveArtistAutocomplete
   requirements:
     _permission: 'access content'
+
+music_search.create.track:
+  path: '/music_search/create/track'
+  defaults:
+    _title: Create Track
+    _form:  \Drupal\music_search\Form\SaveTrackAutocomplete
+  requirements:
+    _permission: 'access content'
+
+music_search.create.album:
+  path: '/music_search/create/album'
+  defaults:
+    _title: Create Album
+    _form:  \Drupal\music_search\Form\SaveAlbumAutocomplete
+  requirements:
+    _permission: 'access content'
