@@ -133,6 +133,12 @@ class ChooseFromOptions extends FormBase {
     if ($type === 'track') {
       $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
       $ids = ["spotify"=>$spoifyid];
+    } elseif ($spotifyname === null && $discogsname !== null) {
+      $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
+      $ids = ["discogs"=>$discogsid];
+    } elseif ($spotifyname !== null && $discogsname === null) {
+      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
+      $ids = ["spotify"=>$spoifyid];
     } else {
       $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
       $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
