@@ -28,7 +28,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
   /**
    * {@inheritdoc}
    */
-  protected function addFields(array $form, FormStateInterface $form_state, $all_autofill_data) {
+  protected function addFields(array &$form, FormStateInterface $form_state, $all_autofill_data) {
 
     // Track name.
     $names = $this->getAll(function ($item) {
