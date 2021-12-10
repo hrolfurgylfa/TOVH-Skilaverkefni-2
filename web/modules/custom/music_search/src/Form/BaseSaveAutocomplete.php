@@ -274,7 +274,7 @@ abstract class BaseSaveAutocomplete extends FormBase {
    * This is essentially the same as submitForm but provides the ids from the
    * services like spotify and discogs in a keyed array.
    */
-  abstract public function saveData(array &$form, FormStateInterface $form_state, $ids);
+  abstract protected function saveData(array &$form, FormStateInterface $form_state, $ids);
 
   /**
    * {@inheritdoc}

@@ -56,7 +56,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
   /**
    * {@inheritdoc}
    */
-  public function saveData(array &$form, FormStateInterface $form_state, $ids) {
+  protected function saveData(array &$form, FormStateInterface $form_state, $ids) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $length = $this->getRadioWithOther($form_state, "length");

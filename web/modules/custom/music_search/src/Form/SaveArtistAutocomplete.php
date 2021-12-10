@@ -120,7 +120,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
   /**
    * {@inheritdoc}
    */
-  public function saveData(array &$form, FormStateInterface $form_state, $ids) {
+  protected function saveData(array &$form, FormStateInterface $form_state, $ids) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
