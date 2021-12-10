@@ -138,7 +138,31 @@ class MusicSearchService {
     $spotifynames = $this->spotifyLookup->search_choose($text, $type);
     $discogsnames = $this->discogsLookup->search_choose($text, $type);
 
-    return ["discogsnames"=>array_slice($discogsnames, 0, 10), "spotifynames"=>array_slice($spotifynames, 0, 10)];
+    $filteredspotify = [];
+    $filtereddiscogs = [];
+
+    foreach ($spotifynames as $artist) {
+      if (str_contains($artist["name"], ';')) {
+        continue;
+      } elseif (in_array($artist, $filteredspotify)) {
+        // Do nothing
+      } else {
+        array_push($filteredspotify, $artist);
+      }
+    }
+    foreach ($discogsnames as $artist) {
+      if (preg_match('/^.*\([0-9]{1,3}\)$/m', $artist["name"]) === 1) {
+        continue;
+      } elseif (str_contains($artist["name"], ';')) {
+        continue;
+      } elseif (in_array($artist, $filtereddiscogs)) {
+        // Do nothing
+      } else {
+        array_push($filtereddiscogs, $artist);
+      }
+    }
+
+    return ["discogsnames"=>array_slice($filtereddiscogs, 0, 10), "spotifynames"=>array_slice($filteredspotify, 0, 10)];
   }
 
 }

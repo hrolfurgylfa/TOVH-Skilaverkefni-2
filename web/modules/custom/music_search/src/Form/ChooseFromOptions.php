@@ -49,8 +49,10 @@ class ChooseFromOptions extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $searched_name = \Drupal::request()->query->get("name");
-    $type = \Drupal::routeMatch()->getParameter('type');
-    $suggestions = $this->musicSearchService->search_name_img($searched_name, 'artist');
+    $url = \Drupal::routeMatch()->getRouteName();
+    $urlarray = explode('.', $url);
+    $type = end($urlarray);
+    $suggestions = $this->musicSearchService->search_name_img($searched_name, $type);
 
     $discogs = $suggestions["discogsnames"];
     $spotify = $suggestions["spotifynames"];
@@ -66,29 +68,36 @@ class ChooseFromOptions extends FormBase {
       array_push($spotifynames, $artist["name"]);
     }
 
+    if ($type === 'track') {
+      $spotifyninfo = array_map(function ($item) {
+        return $item["name"] . ' - ' . $item["artist"];
+      }, $spotify);
+    } else {
+      $spotifyninfo = array_map(function ($item) {
+        return '<img src="' . $item["img"] . '" width="100" height="auto">  ' . $item["name"];
+      }, $spotify);
 
-    $spotifynamesandimg = array_map(function ($item) {
-      return '<img src="'. $item["img"] . '" width="100" height="auto">  ' . $item["name"];
-    }, $spotify);
-
-    $discogsnamesandimg = array_map(function ($item) {
-      return '<img src="'. $item["img"] . '" width="100" height="auto">  ' . $item["name"];
-    }, $discogs);
+      $discogsinfo = array_map(function ($item) {
+        return '<img src="' . $item["img"] . '" width="100" height="auto">  ' . $item["name"];
+      }, $discogs);
+    }
 
 
     $form['spotify_select'] = [
       '#type' => 'radios',
       '#title' => $this->t('Pick From Spotify'),
-      '#options' => array_combine($spotifynames, $spotifynamesandimg),
+      '#options' => array_combine($spotifynames, $spotifyninfo),
       '#required' => TRUE,
     ];
 
-    $form['discogs_select'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Pick From Discogs'),
-      '#options' => array_combine($discogsnames, $discogsnamesandimg),
-      '#required' => TRUE,
-    ];
+    if ($type !== 'track') {
+      $form['discogs_select'] = [
+        '#type' => 'radios',
+        '#title' => $this->t('Pick From Discogs'),
+        '#options' => array_combine($discogsnames, $discogsinfo),
+        '#required' => TRUE,
+      ];
+    }
 
     $form['actions']['backToSearch'] = [
       '#type' => 'submit',
@@ -118,11 +127,18 @@ class ChooseFromOptions extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $spotifyname = $form_state->getValue("spotify_select");
     $discogsname = $form_state->getValue("discogs_select");
-    $type = "artist";
-    $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
-    $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
+    $url = \Drupal::routeMatch()->getRouteName();
+    $urlarray = explode('.', $url);
+    $type = end($urlarray);
 
-    $ids = ["spotify"=>$spoifyid, "discogs"=>$discogsid];
+    if ($type === 'track') {
+      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
+      $ids = ["spotify"=>$spoifyid];
+    } else {
+      $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
+      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
+      $ids = ["spotify"=>$spoifyid, "discogs"=>$discogsid];
+    }
 
     $response = new RedirectResponse(Url::fromRoute("music_search.create." . $type)->toString() . "?" . http_build_query($ids));
     $response->send();

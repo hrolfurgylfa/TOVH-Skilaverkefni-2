@@ -23,12 +23,6 @@ music_search.create.artist:
   requirements:
     _permission: 'access content'
 
-music_search.choose.artist:
-  path: '/music_search/search/choose/artist'
-  defaults:
-    _title: Which do you want?
-    _form:  \Drupal\music_search\Form\ChooseFromOptions
-    
 music_search.create.track:
   path: '/music_search/create/track'
   defaults:
@@ -42,5 +36,33 @@ music_search.create.album:
   defaults:
     _title: Create Album
     _form:  \Drupal\music_search\Form\SaveAlbumAutocomplete
+  requirements:
+    _permission: 'access content'
+
+
+music_search.choose.artist:
+  path: '/music_search/search/choose/artist'
+  defaults:
+    _title: Which do you want?
+    _form:  \Drupal\music_search\Form\ChooseFromOptions
+  requirements:
+    _permission: 'access content'
+
+
+music_search.choose.album:
+  path: '/music_search/search/choose/album'
+  defaults:
+    _title: Which do you want?
+    _form:  \Drupal\music_search\Form\ChooseFromOptions
+  requirements:
+    _permission: 'access content'
+
+
+
+music_search.choose.track:
+  path: '/music_search/search/choose/track'
+  defaults:
+    _title: Which do you want?
+    _form:  \Drupal\music_search\Form\ChooseFromOptions
   requirements:
     _permission: 'access content'
