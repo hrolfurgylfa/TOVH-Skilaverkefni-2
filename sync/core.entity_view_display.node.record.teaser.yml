@@ -6,11 +6,13 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.record.field_cover_image
     - field.field.node.record.field_description
+    - field.field.node.record.field_discogs_id
     - field.field.node.record.field_music_genre
     - field.field.node.record.field_performer
     - field.field.node.record.field_publisher
     - field.field.node.record.field_release_year
     - field.field.node.record.field_song
+    - field.field.node.record.field_spotify_id
     - image.style.small_
     - node.type.record
   module:
@@ -72,5 +74,7 @@ content:
     third_party_settings: {  }
 hidden:
   field_description: true
+  field_discogs_id: true
   field_music_genre: true
   field_song: true
+  field_spotify_id: true

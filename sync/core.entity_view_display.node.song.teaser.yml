@@ -5,7 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.song.field_length
-    - field.field.node.song.field_spotify
+    - field.field.node.song.field_spotify_id
     - node.type.song
   module:
     - duration_field
@@ -35,5 +35,5 @@ content:
       separator: space
     third_party_settings: {  }
 hidden:
-  field_spotify: true
+  field_spotify_id: true
   links: true

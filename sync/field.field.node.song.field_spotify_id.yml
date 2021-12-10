@@ -1,12 +1,12 @@
-uuid: 2459a5bd-d8c5-4b02-accb-8f0103a07093
+uuid: 8282a71a-8b6e-458a-b09c-d090a96eea2b
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_spotify
+    - field.storage.node.field_spotify_id
     - node.type.song
-id: node.song.field_spotify
-field_name: field_spotify
+id: node.song.field_spotify_id
+field_name: field_spotify_id
 entity_type: node
 bundle: song
 label: 'Spotify ID'

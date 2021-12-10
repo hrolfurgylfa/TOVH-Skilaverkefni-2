@@ -1,18 +1,18 @@
-uuid: 7bbf8c80-f4ce-4b7e-ae37-1d9485824966
+uuid: cf6ff473-3ce8-4ee6-a061-716800cc910b
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_discogs_id
-    - node.type.artist
-id: node.artist.field_discogs_id
+    - node.type.record
+id: node.record.field_discogs_id
 field_name: field_discogs_id
 entity_type: node
-bundle: artist
+bundle: record
 label: 'Discogs ID'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }

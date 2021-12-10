@@ -1,0 +1,5 @@
+spotify_client_id: afda
+spotify_client_secret: asdf
+spotify_lookup:
+  spotify_client_id: MY_CLIENT_ID
+  spotify_client_secret: C_SECRET
