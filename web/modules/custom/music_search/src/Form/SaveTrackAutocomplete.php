@@ -17,17 +17,13 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
    */
   public function buildForm(array $form, FormStateInterface $form_state) : array {
     $spotify_id = \Drupal::request()->query->get("spotify");
-    $discogs_id = \Drupal::request()->query->get("discogs");
-    if (!$spotify_id && !$discogs_id) {
+    if (!$spotify_id) {
       $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
       $res->send();
     }
     $all_autofill_data = [];
     if ($spotify_id) {
       array_push($all_autofill_data, $this->musicSearchService->getSpotifyTrack($spotify_id));
-    }
-    if ($discogs_id) {
-      array_push($all_autofill_data, $this->musicSearchService->getDiscogsTrack($discogs_id));
     }
 
     // Track name.
@@ -43,7 +39,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
 
     // Track length.
     $length = $this->getAll(function ($item) {
-      return $item->getLength();
+      return $item->getDuration();
     }, $all_autofill_data);
     $this->radioWithOther($form, "length", [
       '#type' => "radios",
@@ -61,9 +57,9 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
+    $length = $this->getRadioWithOther($form_state, "length");
 
     $spotify_id = \Drupal::request()->query->get("spotify");
-    $discogs_id = \Drupal::request()->query->get("discogs");
 
 
 
@@ -71,8 +67,8 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
     $node = Node::create([
       "type" => "song",
       "title" => $name,
+      "field_song_length" => $length,
       "status" => Node::PUBLISHED,
-      "field_discogs_id" => $discogs_id,
       "field_spotify_id" => $spotify_id,
     ]);
     $node->save();
