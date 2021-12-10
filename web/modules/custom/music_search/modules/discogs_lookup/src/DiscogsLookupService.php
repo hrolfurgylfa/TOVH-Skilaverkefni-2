@@ -143,7 +143,7 @@ class DiscogsLookupService {
 
     $returnlist = [];
     foreach ($items as $item) {
-      array_push($returnlist, ["id"=>$item->id, "name"=>$item->title, "img"=>$item->thumb]);
+      array_push($returnlist, ["id"=>$item->id, "name"=>$item->title, "img"=>$item->thumb, "artist" => $item->artists[0]["id"]]);
     }
     return $returnlist;
 

@@ -141,24 +141,37 @@ class MusicSearchService {
     $filteredspotify = [];
     $filtereddiscogs = [];
 
-    foreach ($spotifynames as $artist) {
-      if (str_contains($artist["name"], ';')) {
+    foreach ($spotifynames as $item) {
+      if (str_contains($item["name"], ';')) {
         continue;
-      } elseif (in_array($artist, $filteredspotify)) {
-        // Do nothing
       } else {
-        array_push($filteredspotify, $artist);
+        $alreadyexists = false;
+        foreach ($filteredspotify as $alreadyadded) {
+          if ($alreadyadded["name"] === $item["name"] && $alreadyadded["artist"] === $item["artist"]) {
+            $alreadyexists = true;
+          }
+        }
+        if ($alreadyexists === false) {
+          array_push($filteredspotify, $item);
+        }
       }
     }
-    foreach ($discogsnames as $artist) {
-      if (preg_match('/^.*\([0-9]{1,3}\)$/m', $artist["name"]) === 1) {
+    $num = -1;
+    foreach ($discogsnames as $item) {
+      if (preg_match('/^.*\([0-9]{1,3}\)$/m', $item["name"]) === 1) {
         continue;
-      } elseif (str_contains($artist["name"], ';')) {
+      } elseif (str_contains($item["name"], ';')) {
         continue;
-      } elseif (in_array($artist["name"], $filtereddiscogs)) {
-        // Do nothing
       } else {
-        array_push($filtereddiscogs, $artist);
+        $alreadyexists = false;
+        foreach ($filtereddiscogs as $alreadyadded) {
+          if ($alreadyadded["name"] === $item["name"] && $alreadyadded["artist"] === $item["artist"]) {
+            $alreadyexists = true;
+          }
+        }
+        if ($alreadyexists === false) {
+          array_push($filtereddiscogs, $item);
+        }
       }
     }
 
