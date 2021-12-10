@@ -93,7 +93,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
       "title" => $name,
       "field_length" => ["duration" => $duration],
       "status" => Node::PUBLISHED,
-      "field_spotify_id" => $ids->spotify,
+      "field_spotify_id" => $ids["spotify"],
     ]);
     $node->save();
   }

@@ -133,8 +133,8 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "field_images_media" => [$media],
       "field_website" => $website_link,
       "field_mus" => $genre_terms,
-      "field_discogs_id" => $ids->discogs,
-      "field_spotify_id" => $ids->spotify,
+      "field_discogs_id" => $ids["discogs"],
+      "field_spotify_id" => $ids["spotify"],
     ]);
     $node->save();
   }
