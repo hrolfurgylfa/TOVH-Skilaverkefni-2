@@ -87,7 +87,6 @@ class ChooseFromOptions extends FormBase {
       '#type' => 'radios',
       '#title' => $this->t('Pick From Spotify'),
       '#options' => array_combine($spotifynames, $spotifyninfo),
-      '#required' => TRUE,
     ];
 
     if ($type !== 'track') {
@@ -95,19 +94,19 @@ class ChooseFromOptions extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Pick From Discogs'),
         '#options' => array_combine($discogsnames, $discogsinfo),
-        '#required' => TRUE,
       ];
     }
+
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Create Content'),
+    ];
 
     $form['actions']['backToSearch'] = [
       '#type' => 'submit',
       '#value' => $this->t('Go Back To Search'),
       '#submit' => [[$this, 'goBackToSearch']],
-    ];
-
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Create Content'),
+      '#limit_validation_errors' => array(),
     ];
 
     return $form;
