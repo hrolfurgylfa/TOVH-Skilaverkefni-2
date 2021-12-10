@@ -149,11 +149,11 @@ class SpotifyLookupService {
     $returnlist = [];
     if ($type === 'track') {
       foreach ($items as $item) {
-        array_push($returnlist, ["name" => $item->name, "artist" => $item->artists[0]->name]);
+        array_push($returnlist, ["id"=>$item->id, "name" => $item->name, "artist" => $item->artists[0]->name]);
       }
     } else {
       foreach ($items as $item) {
-        array_push($returnlist, ["name" => $item->name, "img" => $item->images[0]->url]);
+        array_push($returnlist, ["id"=>$item->id, "name" => $item->name, "img" => $item->images[0]->url]);
       }
     }
     return $returnlist;

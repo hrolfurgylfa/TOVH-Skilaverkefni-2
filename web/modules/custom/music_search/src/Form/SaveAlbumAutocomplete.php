@@ -10,20 +10,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Form to handle article autocomplete.
  */
-class SaveRecordAutocomplete extends BaseSaveAutocomplete {
+class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
 
   /**
    * {@inheritDoc}
    */
   protected function getSpotifyData($spotify_id) {
-    return $this->musicSearchService->getSpotifyArtist($spotify_id);
+    return $this->musicSearchService->getSpotifyAlbum($spotify_id);
   }
 
   /**
    * {@inheritDoc}
    */
   protected function getDiscogsData($discogs_id) {
-    return $this->musicSearchService->getDiscogsArtist($discogs_id);
+    return $this->musicSearchService->getDiscogsRelease($discogs_id);
   }
 
   /**
@@ -31,18 +31,29 @@ class SaveRecordAutocomplete extends BaseSaveAutocomplete {
    */
   public function addFields(array &$form, FormStateInterface $form_state, array $autofill_data) {
 
-    // Artist name.
+    // Album name
     $names = $this->getAll(function ($item) {
       return $item->getName();
     }, $autofill_data);
     $this->radioWithOther($form, "name", [
       '#type' => "radios",
-      '#title' => "Name",
+      '#title' => "Name of album",
       '#options' => array_combine($names, $names),
       "#required" => TRUE,
     ]);
 
-    // Artist description.
+    // Artist of album
+    $artists = $this->getAll(function ($item) {
+      return $item->getArtistsId();
+    }, $autofill_data);
+    $this->radioWithOther($form, "artists", [
+      '#type' => "radios",
+      '#title' => "Artist",
+      '#options' => array_combine($artists, $artists),
+      "#required" => TRUE,
+    ]);
+
+    // Album description.
     $descriptions = $this->getAll(function ($item) {
       return $item->getDescription();
     }, $autofill_data);
@@ -53,7 +64,7 @@ class SaveRecordAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    // Artist image.
+    // Album image.
     $images = $this->getAll(function ($item) {
       return $item->getImageURL();
     }, $autofill_data);
@@ -67,43 +78,6 @@ class SaveRecordAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    // Birth date.
-    $birth_date = $this->getAll(function ($item) {
-      return $item->getBirthDate();
-    }, $autofill_data);
-    $birth_date_str = array_map(function ($d) {
-      return $d->format("Y-m-d");
-    }, $birth_date);
-    $this->radioWithOther($form, "birth_date", [
-      '#type' => "radios",
-      '#title' => "Birth Date",
-      '#options' => array_combine($birth_date_str, $birth_date_str),
-      "#required" => TRUE,
-    ], ["#type" => "date"]);
-
-    // Death date.
-    $death_date = $this->getAll(function ($item) {
-      return $item->getDeathDate();
-    }, $autofill_data);
-    $death_date_str = array_map(function ($d) {
-      return $d->format("Y-m-d");
-    }, $death_date);
-    $this->radioWithOther($form, "death_date", [
-      '#type' => "radios",
-      '#title' => "Death Date",
-      '#options' => array_combine($death_date_str, $death_date_str),
-    ], ["#type" => "date"]);
-
-    // Website link.
-    $website_link = $this->getAll(function ($item) {
-      return $item->getWebsiteLink();
-    }, $autofill_data);
-    $this->radioWithOther($form, "website_link", [
-      '#type' => "radios",
-      '#title' => "Website Link",
-      '#options' => array_combine($website_link, $website_link),
-      "#required" => TRUE,
-    ]);
 
     // Genres.
     $genres = $this->getAll(function ($item) {

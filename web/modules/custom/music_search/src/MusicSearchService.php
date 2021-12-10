@@ -134,7 +134,7 @@ class MusicSearchService {
     return array_slice($displaynames, 0, 10);
   }
 
-  public function search_name_img(String $text, String $type) {
+  public function search_info(String $text, String $type) {
     $spotifynames = $this->spotifyLookup->search_choose($text, $type);
     $discogsnames = $this->discogsLookup->search_choose($text, $type);
 
@@ -155,7 +155,7 @@ class MusicSearchService {
         continue;
       } elseif (str_contains($artist["name"], ';')) {
         continue;
-      } elseif (in_array($artist, $filtereddiscogs)) {
+      } elseif (in_array($artist["name"], $filtereddiscogs)) {
         // Do nothing
       } else {
         array_push($filtereddiscogs, $artist);

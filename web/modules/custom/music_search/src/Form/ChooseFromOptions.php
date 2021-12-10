@@ -52,20 +52,20 @@ class ChooseFromOptions extends FormBase {
     $url = \Drupal::routeMatch()->getRouteName();
     $urlarray = explode('.', $url);
     $type = end($urlarray);
-    $suggestions = $this->musicSearchService->search_name_img($searched_name, $type);
+    $suggestions = $this->musicSearchService->search_info($searched_name, $type);
 
     $discogs = $suggestions["discogsnames"];
     $spotify = $suggestions["spotifynames"];
 
-    $discogsnames = [];
-    $spotifynames = [];
+    $discogsids = [];
+    $spotifyids = [];
 
     foreach ($discogs as $artist) {
-      array_push($discogsnames, $artist["name"]);
+      array_push($discogsids, $artist["id"]);
     }
 
     foreach ($spotify as $artist) {
-      array_push($spotifynames, $artist["name"]);
+      array_push($spotifyids, $artist["id"]);
     }
 
     if ($type === 'track') {
@@ -86,14 +86,14 @@ class ChooseFromOptions extends FormBase {
     $form['spotify_select'] = [
       '#type' => 'radios',
       '#title' => $this->t('Pick From Spotify'),
-      '#options' => array_combine($spotifynames, $spotifyninfo),
+      '#options' => array_combine($spotifyids, $spotifyninfo),
     ];
 
     if ($type !== 'track') {
       $form['discogs_select'] = [
         '#type' => 'radios',
         '#title' => $this->t('Pick From Discogs'),
-        '#options' => array_combine($discogsnames, $discogsinfo),
+        '#options' => array_combine($discogsids, $discogsinfo),
       ];
     }
 
@@ -124,25 +124,20 @@ class ChooseFromOptions extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $spotifyname = $form_state->getValue("spotify_select");
-    $discogsname = $form_state->getValue("discogs_select");
+    $spotifyid = $form_state->getValue("spotify_select");
+    $discogsid = $form_state->getValue("discogs_select");
     $url = \Drupal::routeMatch()->getRouteName();
     $urlarray = explode('.', $url);
     $type = end($urlarray);
 
     if ($type === 'track') {
-      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
-      $ids = ["spotify"=>$spoifyid];
-    } elseif ($spotifyname === null && $discogsname !== null) {
-      $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
+      $ids = ["spotify"=>$spotifyid];
+    } elseif ($spotifyid === null && $discogsid !== null) {
       $ids = ["discogs"=>$discogsid];
-    } elseif ($spotifyname !== null && $discogsname === null) {
-      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
-      $ids = ["spotify"=>$spoifyid];
+    } elseif ($spotifyid !== null && $discogsid === null) {
+      $ids = ["spotify"=>$spotifyid];
     } else {
-      $discogsid = $this->musicSearchService->getIdsByName($discogsname, $type)["discogs"];
-      $spoifyid = $this->musicSearchService->getIdsByName($spotifyname, $type)["spotify"];
-      $ids = ["spotify"=>$spoifyid, "discogs"=>$discogsid];
+      $ids = ["spotify"=>$spotifyid, "discogs"=>$discogsid];
     }
 
     $response = new RedirectResponse(Url::fromRoute("music_search.create." . $type)->toString() . "?" . http_build_query($ids));

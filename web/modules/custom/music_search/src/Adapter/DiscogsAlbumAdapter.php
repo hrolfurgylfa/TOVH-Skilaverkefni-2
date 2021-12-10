@@ -19,15 +19,12 @@ class DiscogsAlbumAdapter implements IAlbum {
     return $this->discogsAlbum->title;
   }
 
-  public function getArtistsId(): array
+  public function getArtistsId(): string
   {
-    $returnlist = [];
     if (count($this->discogsAlbum->artists) >= 1) {
-      foreach ($this->discogsAlbum->artists as $artist) {
-        array_push($returnlist, $artist->id);
-      }
+      return $this->discogsAlbum->artists[0]->id;
     }
-    return $returnlist;
+    return '';
   }
 
   public function getDescription(): string {
