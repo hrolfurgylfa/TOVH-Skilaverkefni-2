@@ -153,7 +153,7 @@ class SpotifyLookupService {
       }
     } else {
       foreach ($items as $item) {
-        array_push($returnlist, ["id"=>$item->id, "name" => $item->name, "img" => $item->images[0]->url]);
+        array_push($returnlist, ["id"=>$item->id, "name" => $item->name, "img" => $item->images[0]->url, "artist" => $item->artists[0]->id]);
       }
     }
     return $returnlist;
