@@ -51,6 +51,10 @@ class MusicSearchForm extends FormBase {
     $type = \Drupal::routeMatch()->getParameter('autocomplete_type');
 
     $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Next Step'),
+    ];
     $form['actions']['goToArtistSearch'] = [
       '#type' => 'submit',
       '#value' => $this->t('Artist search'),
@@ -71,10 +75,6 @@ class MusicSearchForm extends FormBase {
       '#title' => $this->t('Search for ' . $type),
       '#autocomplete_route_name' => 'music_search.search_form.autocomplete',
       '#autocomplete_route_parameters' => ['search_type' => $type],
-    ];
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Next Step'),
     ];
 
     return $form;
