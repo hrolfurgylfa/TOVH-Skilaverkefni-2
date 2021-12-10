@@ -42,30 +42,78 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
     ]);
 
     // Track length.
-    $length = $this->getAll(function ($item) {
-      return $item->getDuration();
+    $seconds = $this->getAll(function ($item) {
+      return $item->getDuration() < 3600 * 24 ? $item->getDuration() : NULL;
     }, $all_autofill_data);
+    $human_length = array_map(function ($item) {
+      $duration = $this->secondsToDateInterval($item);
+      $short = $duration->format("%i min %s sec");
+      $hours = $duration->format("%h hours ");
+      return $duration->h === 0 ? $short : $hours . $short;
+    }, $seconds);
     $this->radioWithOther($form, "length", [
       '#type' => "radios",
       '#title' => "Length",
-      '#options' => array_combine($length, $length),
+      '#options' => array_combine($seconds, $human_length),
       "#required" => TRUE,
-    ], ["#type" => "duration"]);
+    ], ["#type" => "duration", "#granularity" => "h:i:s"]);
+  }
+
+  /**
+   *
+   */
+  protected function secondsToTimeArray(int $seconds): array {
+    $time_lengths = [60, 60, 24, 30, 12, INF];
+    $result = [];
+
+    // Loop through each time length and add a value that is less to the
+    // results.
+    $val = $seconds;
+    $i = -1;
+    while ($time_lengths[$i + 1] < $val) {
+      $i += 1;
+      $result[] = $val % $time_lengths[$i];
+      $val = (int) ($val / $time_lengths[$i]);
+    }
+
+    // Convert the seconds/minutes/hour/... array to a DateInterval.
+    $result[] = $val;
+    return $result;
+  }
+
+  /**
+   *
+   */
+  protected function secondsToDateInterval(int $seconds): \DateInterval {
+    $interval = new \DateInterval("PT" . $seconds . "S");
+    $d1 = new \DateTimeImmutable();
+    $d2 = $d1->add($interval);
+    return $d2->diff($d1);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function saveData(array &$form, FormStateInterface $form_state, $ids) {
+    $duration_service = \Drupal::service('duration_field.service');
+
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $length = $this->getRadioWithOther($form_state, "length");
+
+    // Turn the $length into into a date interval if it came in as seconds.
+    if (!is_a($length, "DateInterval")) {
+      $length = $this->secondsToDateInterval($length);
+    }
+
+    // Make the string the Duration Field addon expects.
+    $duration = $duration_service->getDurationStringFromDateInterval($length);
 
     // Create the content.
     $node = Node::create([
       "type" => "song",
       "title" => $name,
-      "field_length" => $length,
+      "field_length" => ["duration" => $duration],
       "status" => Node::PUBLISHED,
       "field_spotify_id" => $ids->spotify,
     ]);
