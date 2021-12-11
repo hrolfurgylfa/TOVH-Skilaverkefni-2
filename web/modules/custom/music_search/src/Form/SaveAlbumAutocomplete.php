@@ -64,6 +64,15 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $flat_nids = array_merge(...$nids);
     $nodes =  \Drupal\node\Entity\Node::loadMultiple($flat_nids);
 
+    $nids_found = [];
+    foreach ($flat_nids as $nid) {
+      if (in_array($nid, $nids_found)) {
+        // do nothing
+      } else {
+        array_push($nids_found, $nid);
+      }
+    }
+
     $nodenames = [];
     foreach ($nodes as $node) {
       $info = $node->getTranslatableFields();
@@ -71,12 +80,14 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       $list = $title->getValue();
       array_push($nodenames, $list[0]);
     }
-    //artist exists
+
+    $nodenames = array_merge(...$nodenames);
+    // Artist exists
     if ($nodes !== null) {
       $this->radioWithOther($form, "artist", [
         '#type' => "radios",
         '#title' => "Artist",
-        '#options' => array_combine([$flat_nids[0]], $nodenames),
+        '#options' => array_combine($nids_found, $nodenames),
         "#required" => TRUE,
       ]);
     }
@@ -97,6 +108,15 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
         "field_spotify_id" => "",
       ]);
       $node->save();
+      $nid = $node->get('nid')->getValue();
+      $title = $info['title'];
+      $list = $title->getValue();
+      $this->radioWithOther($form, "artist", [
+        '#type' => "radios",
+        '#title' => "Artist",
+        '#options' => array_combine($nid[0], $list),
+        "#required" => TRUE,
+      ]);
     }
 
 
