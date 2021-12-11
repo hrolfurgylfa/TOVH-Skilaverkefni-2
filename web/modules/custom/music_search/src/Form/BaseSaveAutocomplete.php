@@ -42,7 +42,7 @@ abstract class BaseSaveAutocomplete extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('music_search')
+    $container->get('music_search')
     );
   }
 
@@ -50,22 +50,6 @@ abstract class BaseSaveAutocomplete extends FormBase {
    * Help create radio or checkbox buttons that have a other textfield for other information.
    */
   protected function radioWithOther(array &$form, string $id, array $field, array $other_textfield = NULL) {
-
-    // Remove spaces from options field.
-    /*
-    $keys_to_clean = [];
-    foreach ($field["#options"] as $key) {
-    if (strstr($key, " ") !== FALSE) {
-    $keys_to_clean[] = $key;
-    }
-    }
-    foreach ($keys_to_clean as $key) {
-    $value = $field["#options"][$key];
-    unset($field["#options"][$key]);
-    $new_key = implode("_", explode(" ", $key));
-    $field["#options"][$new_key] = $value;
-    }
-     */
 
     // Setup the field.
     $id_string = $id . "_select";
@@ -80,15 +64,8 @@ abstract class BaseSaveAutocomplete extends FormBase {
     $other_textfield["#attributes"] = ['id' => 'custom-' . $id];
 
     // Make other work with other options if checkboxes are used.
-    $other_visible_condition = NULL;
-    // If ($field["#type"] == "checkboxes") {
-    //   $other_visible_condition = [':input[id="edit-' . $id . '-select-other"]' => ["checked" => TRUE]];
-    // }
-    // else {.
-    $other_visible_condition = [':input[name="' . $id_string . '"]' => ["value" => "other"]];
-    // }
     $other_textfield["#states"] = [
-      "visible" => $other_visible_condition,
+      "visible" => [':input[name="' . $id_string . '"]' => ["value" => "other"]],
     ];
 
     // Select other by default if radio buttons are used and other is the only one.
@@ -102,13 +79,122 @@ abstract class BaseSaveAutocomplete extends FormBase {
   /**
    *
    */
+  private function insertAfterKey(array &$original, mixed $key, mixed $new_key, mixed $new_value) {
+    $index = 0;
+    foreach (array_keys($original) as $og_key) {
+      if ($og_key === $key) {
+        break;
+      }
+      $index++;
+    }
+    $end = array_splice($original, $index, count($original) - $index);
+    $original[$new_key] = $new_value;
+    foreach ($end as $key => $val) {
+      $original[$key] = $val;
+    }
+  }
+
+  /**
+   * Go through the passed in form and fix the checkbox fields.
+   *
+   * This function converts all "checkboxes" fields into multiple individual
+   * "checkbox" fields as the "checkboxes" fields were crashing before
+   * submitForm could be called.
+   */
+  protected function fixCheckboxes(array &$form) {
+    // Find all the checkboxes in the form.
+    foreach ($form as $form_key => &$form_value) {
+      if ($form_value["#type"] === "checkboxes") {
+        $options = &$form[$form_key]["#options"];
+
+        // Find the other textfield if there is one os that this doesn't break
+        // checkboxes with other fields.
+        $other_textfield_key = NULL;
+        $all_form_keys = array_keys($form);
+        $estimated_radioWithOther_id = explode("_", $form_key)[0];
+        for ($j = 0; $j < count($form); $j++) {
+          if ($all_form_keys[$j] === "custom_" . $estimated_radioWithOther_id) {
+            $other_textfield_key = $all_form_keys[$j];
+          }
+        }
+
+        // Loop through each option to make all the options as their own fields.
+        for ($i = 0; $i < count($options); $i++) {
+          // Make the new field.
+          $option_key = array_keys($options)[$i];
+          $new_form_key = $form_key . "_checkbox_" . $i;
+          $this->insertAfterKey($form, $form_key, $new_form_key, $form[$form_key]);
+          // Make sure the value returned stays the same.
+          $form[$new_form_key]["#value_callback"] = function ($element, $input, $form_state) use ($option_key) {
+            return ($input === FALSE) ? NULL : $option_key;
+          };
+
+          // Set the checkbox fields values.
+          $form[$new_form_key]["#type"] = "checkbox";
+          $form[$new_form_key]["#required"] = FALSE;
+          unset($form[$new_form_key]["#options"]);
+          $form[$new_form_key]["#title"] = $options[$option_key];
+
+          // Set the toggle button to target this option if it is "other" and
+          // we're dealing with something from the radioWithOther function.
+          if ($other_textfield_key !== NULL && $option_key === "other") {
+            $form[$other_textfield_key]["#states"]["visible"] = [
+              ':input[id="edit-' . str_replace("_", "-", $new_form_key) . '"]' => ["checked" => TRUE],
+            ];
+          }
+        }
+
+        unset($form[$form_key]);
+      }
+    }
+  }
+
+  /**
+   * Get values from the form_state.
+   *
+   * This class has a custom method for this as it can get values from functions
+   * like fixCheckboxes at this same time. This means that all subclasses and
+   * methods in this class should call this method instead of calling
+   * $form_state->getValue directly.
+   */
+  protected function getFormStateValue(FormStateInterface $form_state, string $id, $default = NULL) {
+    $val = $form_state->getValue($id);
+
+    // Get values stored by fixCheckboxes.
+    if ($val === NULL && $form_state->getValue($id . "_checkbox_0") !== NULL) {
+      $values = [];
+
+      // Loop through all the values stored by fixCheckboxes until we encounter
+      // a NULL.
+      $i = 0;
+      $next = $form_state->getValue($id . "_checkbox_" . $i);
+      while ($next !== NULL) {
+        $values[] = $next;
+
+        $next = $form_state->getValue($id . "_checkbox_" . $i);
+        $i++;
+      }
+
+      // Return the array of values or the default value if the array is empty.
+      return count($values) === 0 ? $default : $values;
+    }
+
+    // We can give the returned or default value.
+    else {
+      return $val === NULL ? $default : $val;
+    }
+  }
+
+  /**
+   *
+   */
   protected function getRadioWithOther(FormStateInterface $form_state, string $id) {
-    $radio_value = $form_state->getValue($id . "_select");
+    $radio_value = $this->getFormStateValue($form_state, $id . "_select");
     if ($radio_value !== "other") {
       return $radio_value;
     }
     else {
-      return $form_state->getValue("custom_" . $id);
+      return $this->getFormStateValue($form_state, "custom_" . $id);
     }
   }
 
@@ -267,9 +353,12 @@ abstract class BaseSaveAutocomplete extends FormBase {
     $form['actions']['backbutton'] = [
       '#type' => 'submit',
       '#value' => $this->t('Go Back'),
-      '#limit_validation_errors' => array(),
+      '#limit_validation_errors' => [],
       '#submit' => [[$this, 'goBack']],
     ];
+
+    // Make sure all "checkboxes" fields get fixed;.
+    $this->fixCheckboxes($form);
 
     return $form;
 

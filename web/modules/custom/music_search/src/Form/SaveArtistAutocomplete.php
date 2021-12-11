@@ -61,7 +61,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       return '<img src="' . $item . '" width="100" height="auto">';
     }, $images);
     $this->radioWithOther($form, "images", [
-      '#type' => "radios",
+      '#type' => "checkboxes",
       '#title' => "Images",
       '#options' => array_combine($images, $image_html),
       "#required" => TRUE,
