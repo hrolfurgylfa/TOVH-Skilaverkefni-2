@@ -130,12 +130,11 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
 
     // Create the media.
     $image_path = $images;
-    $image_name = $this->getImageNameWithExtension($image_path);
-    $media = $this->saveImage($image_path, $image_name);
+    $media = $this->nodeAutocreation->saveImage($image_path);
 
     // Create the selected genres terms.
     $genres = [$genres];
-    $genre_terms = $this->getOrCreateVocabularyTerms($genres, "music_genre");
+    $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
     $node = Node::create([
