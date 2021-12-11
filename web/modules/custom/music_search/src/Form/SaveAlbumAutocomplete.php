@@ -63,11 +63,8 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       }
     }
 
-    //Get the nodes from the node ids
-    $flat_nids = array_merge(...$nids);
-    $nodes =  \Drupal\node\Entity\Node::loadMultiple($flat_nids);
-
     // If an artist has a spotify and discogs id, we will receive duplicate nids
+    $flat_nids = array_merge(...$nids);
     $nids_found = [];
     foreach ($flat_nids as $nid) {
       if (in_array($nid, $nids_found)) {
@@ -76,6 +73,9 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
         array_push($nids_found, $nid);
       }
     }
+
+    //Get the nodes from the node ids
+    $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids_found);
 
     //Find the name of the artist to display in the form
     $nodenames = [];
@@ -87,15 +87,14 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     }
     $nodenames = array_merge(...$nodenames);
 
-    
     // Artist exists
     if ($nodes !== null) {
-      $this->radioWithOther($form, "artist", [
+      $form["artist"] = [
         '#type' => "radios",
         '#title' => "Artist",
         '#options' => array_combine($nids_found, $nodenames),
         "#required" => TRUE,
-      ]);
+      ];
     }
     // Artist does not exist - create him
     else {
@@ -117,14 +116,14 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       $nid = $node->get('nid')->getValue();
       $title = $info['title'];
       $list = $title->getValue();
-      $this->radioWithOther($form, "artist", [
+
+      $form["artist"] = [
         '#type' => "radios",
         '#title' => "Artist",
         '#options' => array_combine($nid[0], $list),
         "#required" => TRUE,
-      ]);
+      ];
     }
-
 
     // Album description.
     $descriptions = $this->getAll(function ($item) {
