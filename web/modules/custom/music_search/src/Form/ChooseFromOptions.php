@@ -68,18 +68,20 @@ class ChooseFromOptions extends FormBase {
       array_push($spotifyids, $artist["id"]);
     }
 
+    $thumbnailimage = function ($item) {
+      if ($item["img"] === "" or $item["img"] === null) {
+        return $item["name"];
+      }
+      return '<img src="' . $item["img"] . '" width="100" height="auto">  ' . $item["name"];
+    };
+
     if ($type === 'track') {
       $spotifyninfo = array_map(function ($item) {
         return $item["name"] . ' - ' . $item["artist"];
       }, $spotify);
     } else {
-      $spotifyninfo = array_map(function ($item) {
-        return '<img src="' . $item["img"] . '" width="100" height="auto">  ' . $item["name"];
-      }, $spotify);
-
-      $discogsinfo = array_map(function ($item) {
-        return '<img src="' . $item["img"] . '" width="100" height="auto">  ' . $item["name"];
-      }, $discogs);
+      $spotifyninfo = array_map($thumbnailimage, $spotify);
+      $discogsinfo = array_map($thumbnailimage, $discogs);
     }
 
 

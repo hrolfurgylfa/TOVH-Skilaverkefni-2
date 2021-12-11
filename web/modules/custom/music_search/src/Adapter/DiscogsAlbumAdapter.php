@@ -32,11 +32,16 @@ class DiscogsAlbumAdapter implements IAlbum {
   }
 
   public function getImageURL(): string {
-    if (count($this->discogsAlbum->images) === 0) {
-      return "";
+    if (property_exists($this->discogsAlbum, 'images')) {
+      if (count($this->discogsAlbum->images) === 0) {
+        return "";
+      }
+      else {
+        return $this->discogsAlbum->images[0]->uri;
+      }
     }
     else {
-      return $this->discogsAlbum->images[0]->uri;
+      return '';
     }
   }
 
