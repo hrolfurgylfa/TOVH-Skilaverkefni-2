@@ -54,11 +54,11 @@ class DiscogsAlbumAdapter implements IAlbum {
   public function getTracks(): array
   {
     $returnlist = [];
-    if (property_exists($this->discogsAlbum, "tracklist")) {
+    /*if (property_exists($this->discogsAlbum, "tracklist")) {
       foreach ($this->discogsAlbum->tracklist as $track) {
-        array_push($returnlist, $track->title);
+        array_push($returnlist, ["name"=>$track->title, "id"=>""]);
       }
-    }
+    }*/
     return $returnlist;
 
   }
