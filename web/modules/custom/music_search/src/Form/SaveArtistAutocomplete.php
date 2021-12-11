@@ -3,9 +3,7 @@
 namespace Drupal\music_search\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form to handle article autocomplete.
@@ -61,7 +59,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       return '<img src="' . $item . '" width="100" height="auto">';
     }, $images);
     $this->radioWithOther($form, "images", [
-      '#type' => "checkboxes",
+      '#type' => "radios",
       '#title' => "Images",
       '#options' => array_combine($images, $image_html),
       "#required" => TRUE,
@@ -130,7 +128,6 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
-
     // Create the media.
     $image_path = $images;
     $image_name = $this->getImageNameWithExtension($image_path);
@@ -165,8 +162,10 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     return "music_search_create_artist_from_search";
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state)
-  {
+  /**
+   *
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $images = $this->getRadioWithOther($form_state, "images");
     if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
