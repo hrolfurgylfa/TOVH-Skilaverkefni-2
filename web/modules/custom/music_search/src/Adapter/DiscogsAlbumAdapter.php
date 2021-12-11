@@ -21,7 +21,7 @@ class DiscogsAlbumAdapter implements IAlbum {
 
   public function getArtistsId(): string
   {
-    if (property_exists($this->discogsAlbum->artists)) {
+    if (property_exists($this->discogsAlbum, "artists")) {
       if (count($this->discogsAlbum->artists) >= 1) {
         return $this->discogsAlbum->artists[0]->id;
       }
