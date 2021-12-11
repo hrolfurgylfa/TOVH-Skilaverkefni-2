@@ -47,6 +47,8 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $artists = $this->getAll(function ($item) {
       return $item->getArtistsId();
     }, $autofill_data);
+
+
     $nids = [];
     foreach ($artists as $artist) {
       $theid = [];
@@ -62,13 +64,41 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $flat_nids = array_merge(...$nids);
     $nodes =  \Drupal\node\Entity\Node::loadMultiple($flat_nids);
 
+    $nodenames = [];
+    foreach ($nodes as $node) {
+      $info = $node->getTranslatableFields();
+      $title = $info['title'];
+      $list = $title->getValue();
+      array_push($nodenames, $list[0]);
+    }
+    //artist exists
+    if ($nodes !== null) {
+      $this->radioWithOther($form, "artist", [
+        '#type' => "radios",
+        '#title' => "Artist",
+        '#options' => array_combine([$flat_nids[0]], $nodenames),
+        "#required" => TRUE,
+      ]);
+    }
+    // Artist does not exist - create him
+    else {
+      $node = Node::create([
+        "type" => "artist",
+        "title" => "",
+        "status" => Node::PUBLISHED,
+        "field_description" => "",
+        "field_band_members" => [],
+        "field_birth_date" => "",
+        "field_death_date" => "",
+        "field_images_media" => [],
+        "field_website" => "website_link",
+        "field_mus" => "",
+        "field_discogs_id" => "",
+        "field_spotify_id" => "",
+      ]);
+      $node->save();
+    }
 
-    $this->radioWithOther($form, "artists", [
-      '#type' => "radios",
-      '#title' => "Artist",
-      '#options' => array_combine($artists, $artists),
-      "#required" => TRUE,
-    ]);
 
     // Album description.
     $descriptions = $this->getAll(function ($item) {
@@ -142,19 +172,10 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
+    $artist = $this->getRadioWithOther($form_state, 'artist');
     $images = $this->getRadioWithOther($form_state, "images");
-    $birth_date = $this->getRadioWithOther($form_state, "birth_date");
-    $death_date = $this->getRadioWithOther($form_state, "death_date");
-    $website_link = $this->getRadioWithOther($form_state, "website_link");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
-    // Make sure there aren't any bad types that will crash the
-    // generated entity.
-    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
-      $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
-      $res->send();
-      return;
-    }
 
     // Create the media.
     $image_path = $images;
@@ -167,15 +188,12 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
 
     // Create the content.
     $node = Node::create([
-      "type" => "artist",
+      "type" => "album",
       "title" => $name,
       "status" => Node::PUBLISHED,
+      "artist" => Node::load($artist),
       "field_description" => $description,
-      "field_band_members" => [],
-      "field_birth_date" => $birth_date,
-      "field_death_date" => $death_date,
       "field_images_media" => [$media],
-      "field_website" => $website_link,
       "field_mus" => $genre_terms,
       "field_discogs_id" => $ids["discogs"],
       "field_spotify_id" => $ids["spotify"],
@@ -187,7 +205,16 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return "music_search_create_artist_from_search";
+    return "music_search_create_album_from_search";
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    $website_link = $this->getRadioWithOther($form_state, "website_link");
+    $images = $this->getRadioWithOther($form_state, "images");
+    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
+      $form_state->setErrorByName('CreateAlbumUrl', $this->t('Website link and images must be valid urls to create album.'));
+    }
   }
 
 }
