@@ -44,11 +44,13 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
 
     // Artist of album
 
+    // Get the spotify and/or discogs ids
     $artists = $this->getAll(function ($item) {
       return $item->getArtistsId();
     }, $autofill_data);
 
 
+    // Find the node id based on the spotify and discogs ids
     $nids = [];
     foreach ($artists as $artist) {
       $theid = [];
@@ -61,9 +63,11 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       }
     }
 
+    //Get the nodes from the node ids
     $flat_nids = array_merge(...$nids);
     $nodes =  \Drupal\node\Entity\Node::loadMultiple($flat_nids);
 
+    // If an artist has a spotify and discogs id, we will receive duplicate nids
     $nids_found = [];
     foreach ($flat_nids as $nid) {
       if (in_array($nid, $nids_found)) {
@@ -73,6 +77,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       }
     }
 
+    //Find the name of the artist to display in the form
     $nodenames = [];
     foreach ($nodes as $node) {
       $info = $node->getTranslatableFields();
@@ -80,8 +85,9 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       $list = $title->getValue();
       array_push($nodenames, $list[0]);
     }
-
     $nodenames = array_merge(...$nodenames);
+
+    
     // Artist exists
     if ($nodes !== null) {
       $this->radioWithOther($form, "artist", [
@@ -192,7 +198,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
-    $artist = $this->getRadioWithOther($form_state, 'artist');
+    $artist_nid = $this->getRadioWithOther($form_state, 'artist');
     $images = $this->getRadioWithOther($form_state, "images");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
@@ -211,7 +217,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "type" => "album",
       "title" => $name,
       "status" => Node::PUBLISHED,
-      "artist" => Node::load($artist),
+      "artist" => Node::load($artist_nid),
       "field_description" => $description,
       "field_images_media" => [$media],
       "field_mus" => $genre_terms,
