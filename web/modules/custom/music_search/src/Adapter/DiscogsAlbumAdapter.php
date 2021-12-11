@@ -28,7 +28,12 @@ class DiscogsAlbumAdapter implements IAlbum {
   }
 
   public function getDescription(): string {
-    return $this->discogsAlbum->notes;
+    if (property_exists($this->discogsAlbum, 'notes')) {
+      return $this->discogsAlbum->notes;
+    }
+    else {
+      return '';
+    }
   }
 
   public function getImageURL(): string {
