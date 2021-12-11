@@ -3,9 +3,7 @@
 namespace Drupal\music_search\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form to handle article autocomplete.
@@ -27,11 +25,56 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
   }
 
   /**
+   *
+   */
+  private function getOrCreateArtist(array $artist_ids): Node {
+
+    // Find the node id based on the spotify and discogs ids.
+    $nids = [];
+    foreach ($artist_ids as $artist_id) {
+      $theid = [];
+      $theid = \Drupal::entityQuery('node')->condition('type', 'artist')->condition('field_spotify_id', $artist_id)->execute();
+      if (count($theid) === 0) {
+        $theid = \Drupal::entityQuery('node')->condition('type', 'artist')->condition('field_discogs_id', $artist_id)->execute();
+      }
+      if (count($theid) !== 0) {
+        array_push($nids, $theid);
+      }
+    }
+
+    // If an artist has a spotify and discogs id, we will receive duplicate nids.
+    $flat_nids = array_merge(...$nids);
+    $flat_nids = array_unique($flat_nids, SORT_STRING);
+
+    // Get the nodes from the node ids.
+    $nodes = Node::loadMultiple($flat_nids);
+
+    // Find the name of the artist to display in the form.
+    $nodenames = [];
+    foreach ($nodes as $node) {
+      $info = $node->getTranslatableFields();
+      $title = $info['title'];
+      $list = $title->getValue();
+      array_push($nodenames, $list[0]);
+    }
+    $nodenames = array_merge(...$nodenames);
+
+    // Artist exists.
+    if ($nodes !== NULL and count($nodes) > 0) {
+      return array_values($nodes)[0];
+    }
+    // Artist does not exist - create him.
+    else {
+      return $this->nodeAutocreation->createArtist($artist_ids);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function addFields(array &$form, FormStateInterface $form_state, array $autofill_data) {
 
-    // Album name
+    // Album name.
     $names = $this->getAll(function ($item) {
       return $item->getName();
     }, $autofill_data);
@@ -42,103 +85,38 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    // Artist of album
+    // Date released.
+    $year = $this->getAll(function ($item) {
+      return $item->getReleaseDate();
+    }, $autofill_data);
+    $year_list = array_map(function ($item) {
+      return $item;
+    }, $year);
+    $this->radioWithOther($form, "year", [
+      '#type' => "radios",
+      '#title' => "Year Released",
+      '#options' => array_combine($year_list, $year_list),
+      "#required" => TRUE,
+    ]);
 
-    // Get the spotify and/or discogs ids
-    $artists = $this->getAll(function ($item) {
+    // Artist.
+    $artist_ids = $this->getAll(function ($item) {
       return $item->getArtistsId();
     }, $autofill_data);
 
+    $artist_node = $this->getOrCreateArtist($artist_ids);
 
-    // Find the node id based on the spotify and discogs ids
-    $nids = [];
-    foreach ($artists as $artist) {
-      $theid = [];
-      $theid = \Drupal::entityQuery('node')->condition('type','artist')->condition('field_spotify_id', $artist)->execute();
-      if (count($theid) === 0) {
-        $theid = \Drupal::entityQuery('node')->condition('type','artist')->condition('field_discogs_id', $artist)->execute();
-      }
-      if (count($theid) !== 0) {
-        array_push($nids, $theid);
-      }
-    }
+    $form["artist"] = [
+      '#type' => "radios",
+      '#title' => "Artist",
+      '#options' => [$artist_node->id() => $artist_node->getTitle()],
+      "#required" => TRUE,
+      '#default_value' => $artist_node->id(),
+    ];
 
-    // If an artist has a spotify and discogs id, we will receive duplicate nids
-    $flat_nids = array_merge(...$nids);
-    $nids_found = [];
-    foreach ($flat_nids as $nid) {
-      if (in_array($nid, $nids_found)) {
-        // do nothing
-      } else {
-        array_push($nids_found, $nid);
-      }
-    }
-
-    //Get the nodes from the node ids
-    $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids_found);
-
-    //Find the name of the artist to display in the form
-    $nodenames = [];
-    foreach ($nodes as $node) {
-      $info = $node->getTranslatableFields();
-      $title = $info['title'];
-      $list = $title->getValue();
-      array_push($nodenames, $list[0]);
-    }
-    $nodenames = array_merge(...$nodenames);
-
-    // Artist exists
-    if ($nodes !== null) {
-      $form["artist"] = [
-        '#type' => "radios",
-        '#title' => "Artist",
-        '#options' => array_combine($nids_found, $nodenames),
-        "#required" => TRUE,
-      ];
-    }
-    // Artist does not exist - create him
-    else {
-      $artist = null;
-      foreach ($artists as $id) {
-        if ($artist == null) {
-          if (is_string($id)) {
-            //getSpotifyArtist
-          } else {
-            //getDiscogsArtist
-          }
-        } else {
-          break;
-        }
-      }
-
-      $node = Node::create([
-        "type" => "artist",
-        "title" => "",
-        "status" => Node::PUBLISHED,
-        "field_description" => "",
-        "field_band_members" => [],
-        "field_birth_date" => "",
-        "field_death_date" => "",
-        "field_images_media" => [],
-        "field_website" => "website_link",
-        "field_mus" => "",
-        "field_discogs_id" => "",
-        "field_spotify_id" => "",
-      ]);
-      $node->save();
-      $nid = $node->get('nid')->getValue();
-      $title = $info['title'];
-      $list = $title->getValue();
-
-      $form["artist"] = [
-        '#type' => "radios",
-        '#title' => "Artist",
-        '#options' => array_combine($nid[0], $list),
-        "#required" => TRUE,
-      ];
-    }
-
-    // Album description.
+    /**
+   * Album description.
+   */
     $descriptions = $this->getAll(function ($item) {
       return $item->getDescription();
     }, $autofill_data);
@@ -149,7 +127,9 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    // Album image.
+    /**
+   * Album image.
+   */
     $images = $this->getAll(function ($item) {
       return $item->getImageURL();
     }, $autofill_data);
@@ -163,9 +143,13 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    // Tracks
+    /**
+   * Tracks.
+   */
     $tracks = $this->getAll(function ($item) {
-      return $item->getTracks();}, $autofill_data);
+      return $item->getTracks();
+
+    }, $autofill_data);
     $track_list = array_map(function ($item) {
       return $item;
     }, $tracks);
@@ -182,7 +166,6 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-
     $this->radioWithOther($form, "images", [
       '#type' => "radios",
       '#title' => "Images",
@@ -190,8 +173,9 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-
-    // Genres.
+    /**
+   * Genres.
+   */
     $genres = $this->getAll(function ($item) {
       return $item->getGenres();
     }, $autofill_data);
@@ -201,6 +185,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       '#title' => "Genres",
       '#options' => array_combine($flat_genres, $flat_genres),
     ]);
+
   }
 
   /**
@@ -209,30 +194,30 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
   protected function saveData(array &$form, FormStateInterface $form_state, $ids) {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
+    $year = $this->getRadioWithOther($form_state, "year");
     $description = $this->getRadioWithOther($form_state, "description");
     $artist_nid = $this->getFormStateValue($form_state, 'artist');
     $images = $this->getRadioWithOther($form_state, "images");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
-
     // Create the media.
     $image_path = $images;
-    $image_name = $this->getImageNameWithExtension($image_path);
-    $media = $this->saveImage($image_path, $image_name);
+    $media = $this->nodeAutocreation->createImage($image_path);
 
     // Create the selected genres terms.
     $genres = [$genres];
-    $genre_terms = $this->getOrCreateVocabularyTerms($genres, "music_genre");
+    $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
     $node = Node::create([
-      "type" => "album",
+      "type" => "record",
       "title" => $name,
       "status" => Node::PUBLISHED,
-      "artist" => Node::load($artist_nid),
+      "field_performer" => Node::load($artist_nid),
+      "field_release_year" => $year,
       "field_description" => $description,
-      "field_images_media" => [$media],
-      "field_mus" => $genre_terms,
+      "field_cover_image" => $media,
+      "field_music_genre" => $genre_terms,
       "field_discogs_id" => $ids["discogs"],
       "field_spotify_id" => $ids["spotify"],
     ]);
@@ -246,12 +231,13 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     return "music_search_create_album_from_search";
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state)
-  {
-    $website_link = $this->getRadioWithOther($form_state, "website_link");
+  /**
+   *
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $images = $this->getRadioWithOther($form_state, "images");
-    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
-      $form_state->setErrorByName('CreateAlbumUrl', $this->t('Website link and images must be valid urls to create album.'));
+    if (filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
+      $form_state->setErrorByName('CreateAlbumUrl', $this->t('Cover image must be a valid url to create the album.'));
     }
   }
 

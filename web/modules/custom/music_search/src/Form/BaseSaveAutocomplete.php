@@ -2,28 +2,18 @@
 
 namespace Drupal\music_search\Form;
 
-use Drupal\contact\MessageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\media\Entity\Media;
 use Drupal\music_search\MusicSearchService;
-use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\music_search\NodeAutocreationService;
 
 /**
  * Form to handle article autocomplete.
  */
 abstract class BaseSaveAutocomplete extends FormBase {
-
-  /**
-   * The node storage.
-   *
-   * @var \Drupal\node\NodeStorage
-   */
-  protected $nodeStorage;
 
   /**
    * The injected MusicSearchService.
@@ -33,10 +23,18 @@ abstract class BaseSaveAutocomplete extends FormBase {
   protected $musicSearchService;
 
   /**
+   * The injected NodeAutocreationService.
+   *
+   * @var \Drupal\music_search\NodeAutocreationService
+   */
+  protected $nodeAutocreation;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(MusicSearchService $musicSearchService) {
+  public function __construct(MusicSearchService $musicSearchService, NodeAutocreationService $nodeAutocreationService) {
     $this->musicSearchService = $musicSearchService;
+    $this->nodeAutocreation = $nodeAutocreationService;
   }
 
   /**
@@ -44,7 +42,8 @@ abstract class BaseSaveAutocomplete extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-    $container->get('music_search')
+      $container->get('music_search'),
+      $container->get('node_autocreation')
     );
   }
 
@@ -215,85 +214,6 @@ abstract class BaseSaveAutocomplete extends FormBase {
     }
 
     return $results;
-  }
-
-  /**
-   * Get the name of an image from it's URL, even if it doesn't have a file extension.
-   */
-  protected function getImageNameWithExtension(string $image_url): string {
-    $image_name = end(explode("/", $image_url));
-    $has_extension = str_contains($image_name, ".");
-    return $has_extension ? $image_name : $image_name . ".jpeg";
-  }
-
-  /**
-   * Save an image from a URL to the media library.
-   */
-  protected function saveImage(string $image_url, ?string $filename) {
-    // Get the filename if there is none provided.
-    if ($filename === NULL) {
-      $filename = end(explode("/", $image_url));
-    }
-
-    // Place to be stored.
-    $destination = \Drupal::config('system.file')->get('default_scheme') . '://' . basename($filename);
-
-    // Make image from link.
-    $file_data = file_get_contents($image_url);
-    $file = file_save_data($file_data, $destination);
-    $media = Media::create([
-      'bundle' => 'image',
-      'uid' => \Drupal::currentUser()->id(),
-      'field_media_image' => [
-        'target_id' => $file->id(),
-      ],
-    ]);
-
-    // Get the name without extension.
-    $filename_no_ext = explode(".", $filename)[0];
-
-    // Set to published.
-    $media->setName($filename_no_ext)
-      ->setPublished(TRUE)
-      ->save();
-
-    return $media;
-  }
-
-  /**
-   *
-   */
-  protected function getOrCreateVocabularyTerms(array $term_names, string $vocabulary): array {
-    // Get the existing terms.
-    $query = \Drupal::entityQuery('taxonomy_term');
-    $query->condition('vid', $vocabulary);
-    $term_ids = $query->execute();
-    $terms = Term::loadMultiple($term_ids);
-
-    // Turn the existing terms into a associative array for better performance.
-    $dict_terms = [];
-    foreach ($terms as $term) {
-      $dict_terms[strtolower($term->getName())] = $term;
-    }
-
-    // Get or create the terms.
-    $return_terms = [];
-    foreach ($term_names as $term_name) {
-      $term = $dict_terms[strtolower($term_name)];
-
-      // Create them if needed.
-      if ($term === NULL) {
-        $term = Term::create([
-          "vid" => $vocabulary,
-          "name" => $term_name,
-        ]);
-      }
-
-      // Save the term to the return array.
-      $return_terms[] = $term;
-    }
-
-    return $return_terms;
   }
 
   /**
