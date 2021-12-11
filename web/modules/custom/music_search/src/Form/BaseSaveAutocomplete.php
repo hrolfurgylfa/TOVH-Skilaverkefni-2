@@ -2,8 +2,10 @@
 
 namespace Drupal\music_search\Form;
 
+use Drupal\contact\MessageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\music_search\MusicSearchService;
@@ -300,7 +302,10 @@ abstract class BaseSaveAutocomplete extends FormBase {
       "spotify" => \Drupal::request()->query->get("spotify"),
       "discogs" => \Drupal::request()->query->get("discogs"),
     ];
-    return $this->saveData($form, $form_state, $ids);
+    $this->saveData($form, $form_state, $ids);
+    $this->goBack();
+    $messenger = \Drupal::messenger();
+    $messenger->addMessage('CONTENT ADDED', $messenger::TYPE_STATUS);
   }
 
   /**
