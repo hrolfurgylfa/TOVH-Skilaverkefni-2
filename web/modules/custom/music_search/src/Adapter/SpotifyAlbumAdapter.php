@@ -45,7 +45,7 @@ class SpotifyAlbumAdapter implements IAlbum {
     $returnlist = [];
     if (count($this->spotifyAlbum->tracks->items) >= 1) {
       foreach ($this->spotifyAlbum->tracks->items as $track) {
-        array_push($returnlist, ["id"=>$track->id, "name"=>$track->id]);
+        array_push($returnlist, ["id"=>$track->id, "name"=>$track->name]);
       }
     }
 
