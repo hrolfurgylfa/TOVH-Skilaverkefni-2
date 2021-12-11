@@ -98,6 +98,19 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     }
     // Artist does not exist - create him
     else {
+      $artist = null;
+      foreach ($artists as $id) {
+        if ($artist == null) {
+          if (is_string($id)) {
+            //getSpotifyArtist
+          } else {
+            //getDiscogsArtist
+          }
+        } else {
+          break;
+        }
+      }
+
       $node = Node::create([
         "type" => "artist",
         "title" => "",
@@ -197,7 +210,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     // Get the relevant parameters.
     $name = $this->getRadioWithOther($form_state, "name");
     $description = $this->getRadioWithOther($form_state, "description");
-    $artist_nid = $this->getRadioWithOther($form_state, 'artist');
+    $artist_nid = $this->getFormStateValue($form_state, 'artist');
     $images = $this->getRadioWithOther($form_state, "images");
     $genres = $this->getRadioWithOther($form_state, "genres");
 
