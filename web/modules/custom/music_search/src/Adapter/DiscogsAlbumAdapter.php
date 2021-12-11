@@ -19,8 +19,7 @@ class DiscogsAlbumAdapter implements IAlbum {
     return $this->discogsAlbum->title;
   }
 
-  public function getArtistsId(): string
-  {
+  public function getArtistsId(): string {
     if (property_exists($this->discogsAlbum, "artists")) {
       if (count($this->discogsAlbum->artists) >= 1) {
         return $this->discogsAlbum->artists[0]->id;
@@ -55,10 +54,11 @@ class DiscogsAlbumAdapter implements IAlbum {
   public function getTracks(): array
   {
     $returnlist = [];
-    foreach ($this->discogsAlbum->tracklist as $track) {
-      array_push($returnlist, $track->title);
+    if (property_exists($this->discogsAlbum, "tracklist")) {
+      foreach ($this->discogsAlbum->tracklist as $track) {
+        array_push($returnlist, $track->title);
+      }
     }
-
     return $returnlist;
 
   }
