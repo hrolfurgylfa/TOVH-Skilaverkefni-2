@@ -21,10 +21,12 @@ class DiscogsAlbumAdapter implements IAlbum {
 
   public function getArtistsId(): string
   {
-    if (count($this->discogsAlbum->artists) >= 1) {
-      return $this->discogsAlbum->artists[0]->id;
+    if (property_exists($this->discogsAlbum->artists)) {
+      if (count($this->discogsAlbum->artists) >= 1) {
+        return $this->discogsAlbum->artists[0]->id;
+      }
     }
-    return '';
+    return "";
   }
 
   public function getDescription(): string {
