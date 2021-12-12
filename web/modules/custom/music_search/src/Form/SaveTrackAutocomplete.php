@@ -60,16 +60,6 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
   }
 
   /**
-   * Convert seconds to a balanced DateInterval object.
-   */
-  protected function secondsToDateInterval(int $seconds): \DateInterval {
-    $interval = new \DateInterval("PT" . $seconds . "S");
-    $d1 = new \DateTimeImmutable();
-    $d2 = $d1->add($interval);
-    return $d2->diff($d1);
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function saveData(array &$form, FormStateInterface $form_state, $ids) {
@@ -81,7 +71,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
 
     // Turn the $length into into a date interval if it came in as seconds.
     if (!is_a($length, "DateInterval")) {
-      $length = $this->secondsToDateInterval($length);
+      $length = $this->nodeAutocreation->secondsToDateInterval($length);
     }
 
     // Make the string the Duration Field addon expects.

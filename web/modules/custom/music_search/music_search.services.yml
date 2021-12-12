@@ -4,4 +4,4 @@ services:
     arguments: ["@spotify_lookup", "@discogs_lookup"]
   node_autocreation:
     class: Drupal\music_search\NodeAutocreationService
-    arguments: ["@music_search"];
+    arguments: ["@music_search", "@duration_field.service"];

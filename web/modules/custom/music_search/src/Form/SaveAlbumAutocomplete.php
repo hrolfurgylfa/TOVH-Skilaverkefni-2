@@ -49,16 +49,6 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     // Get the nodes from the node ids.
     $nodes = Node::loadMultiple($flat_nids);
 
-    // Find the name of the artist to display in the form.
-    $nodenames = [];
-    foreach ($nodes as $node) {
-      $info = $node->getTranslatableFields();
-      $title = $info['title'];
-      $list = $title->getValue();
-      array_push($nodenames, $list[0]);
-    }
-    $nodenames = array_merge(...$nodenames);
-
     // Artist exists.
     if ($nodes !== NULL and count($nodes) > 0) {
       return array_values($nodes)[0];
@@ -67,6 +57,44 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     else {
       return $this->nodeAutocreation->createArtist($artist_ids);
     }
+  }
+
+  /**
+   *
+   */
+  private function getOrCreateTracks($track_ids) {
+
+    // Find the node id based on the spotify and discogs ids.
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'song')
+      ->condition('field_spotify_id', $track_ids, "IN");
+
+    $n_ids = $query->execute();
+
+    // Load the nodes.
+    $nodes = Node::loadMultiple($n_ids);
+
+    // Store the nodes keyed with spotify id for better performance.
+    $spotify_id_nodes = [];
+    foreach ($nodes as $node) {
+      $spotify_id = $node->get("field_spotify_id")->getValue()[0]["value"];
+      $spotify_id_nodes[$spotify_id] = $node;
+    }
+
+    // Create the nodes that weren't found and return all the nodes.
+    $return_nodes = [];
+    foreach ($track_ids as $track_id) {
+      if ($spotify_id_nodes[$track_id] === NULL) {
+        // Create the node as it wasn't found.
+        $return_nodes[] = $this->nodeAutocreation->createTrack([$track_id]);
+      }
+      else {
+        // Add the node to the return array.
+        $return_nodes[] = $spotify_id_nodes[$track_id];
+      }
+    }
+
+    return $return_nodes;
   }
 
   /**
@@ -120,10 +148,11 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $descriptions = $this->getAll(function ($item) {
       return $item->getDescription();
     }, $autofill_data);
+    $description_keys = $this->makeKeysSafe($descriptions);
     $this->radioWithOther($form, "description", [
       '#type' => "radios",
       '#title' => "Description",
-      '#options' => array_combine($descriptions, $descriptions),
+      '#options' => array_combine($description_keys, $descriptions),
       "#required" => TRUE,
     ]);
 
@@ -143,26 +172,21 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "#required" => TRUE,
     ]);
 
-    /**
-   * Tracks.
-   */
+    // Tracks.
     $tracks = $this->getAll(function ($item) {
       return $item->getTracks();
-
     }, $autofill_data);
-    $track_list = array_map(function ($item) {
-      return $item;
-    }, $tracks);
-    $flat_track_list = array_merge(...$track_list);
+    $flat_track_list = array_merge(...$tracks);
     $neutral = array_map(function ($item) {
-      return trim($item);
+      return [$item["id"] => trim($item["name"])];
     }, $flat_track_list);
-    $unique_array = array_unique($neutral, SORT_STRING);
-    sort($unique_array);
+    $extra_flat = array_merge(...$neutral);
+    $unique_array = array_unique($extra_flat, SORT_STRING);
+    asort($unique_array);
     $this->radioWithOther($form, "tracks", [
       '#type' => "radios",
       '#title' => "Tracks",
-      '#options' => array_combine($unique_array, $unique_array),
+      '#options' => $unique_array,
       "#required" => TRUE,
     ]);
 
@@ -196,13 +220,19 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $name = $this->getRadioWithOther($form_state, "name");
     $year = $this->getRadioWithOther($form_state, "year");
     $description = $this->getRadioWithOther($form_state, "description");
+    $description = $this->getSafeKey($description);
     $artist_nid = $this->getFormStateValue($form_state, 'artist');
     $images = $this->getRadioWithOther($form_state, "images");
     $genres = $this->getRadioWithOther($form_state, "genres");
+    $songs = $this->getRadioWithOther($form_state, "tracks");
+    $songs = [$songs];
 
     // Create the media.
     $image_path = $images;
     $media = $this->nodeAutocreation->createImage($image_path);
+
+    // Create the selected tracks.
+    $track_nodes = $this->getOrCreateTracks($songs);
 
     // Create the selected genres terms.
     $genres = [$genres];
@@ -214,6 +244,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
       "title" => $name,
       "status" => Node::PUBLISHED,
       "field_performer" => Node::load($artist_nid),
+      "field_song" => $track_nodes,
       "field_release_year" => $year,
       "field_description" => $description,
       "field_cover_image" => $media,

@@ -2,6 +2,7 @@
 
 namespace Drupal\music_search;
 
+use Drupal\duration_field\Service\DurationService;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -19,10 +20,18 @@ class NodeAutocreationService {
   protected $musicSearchService;
 
   /**
+   * Store the injected DurationService.
+   *
+   * @var \Druapl\duration_field\Service\DurationService
+   */
+  protected $durationService;
+
+  /**
    * Construct the class with the dependencies injected by Drupal.
    */
-  public function __construct(MusicSearchService $musicSearchService) {
+  public function __construct(MusicSearchService $musicSearchService, DurationService $durationService) {
     $this->musicSearchService = $musicSearchService;
+    $this->durationService = $durationService;
   }
 
   /**
@@ -139,6 +148,16 @@ class NodeAutocreationService {
   }
 
   /**
+   * Convert seconds to a balanced DateInterval object.
+   */
+  public function secondsToDateInterval(int $seconds): \DateInterval {
+    $interval = new \DateInterval("PT" . $seconds . "S");
+    $d1 = new \DateTimeImmutable();
+    $d2 = $d1->add($interval);
+    return $d2->diff($d1);
+  }
+
+  /**
    * Create an artist from their IDs automatically with no human interaction.
    */
   public function createArtist(array $artist_ids): Node {
@@ -207,6 +226,58 @@ class NodeAutocreationService {
     $node->save();
 
     return $node;
+  }
+
+  /**
+   * Create a track from their ID automatically with no human interaction.
+   *
+   * This track can take in multiple IDs but currently only spotify IDs are
+   * supported as Discogs doesn't have track IDs.
+   */
+  public function createTrack(array $track_ids): Node {
+
+    // Get all the data needed to create the artist.
+    $all_data = [];
+    $spotify_id = NULL;
+    foreach ($track_ids as $id) {
+      // This must be a spotify ID as Discogs doesn't have IDs.
+      $all_data[] = $this->musicSearchService->getSpotifyTrack($id);
+      $spotify_id = $id;
+    }
+
+    // Grab the values or defaults.
+    $name = $this->getFirstOrDefault(function ($item) {
+      return $item->getName();
+    }, $all_data, "");
+    $duration = $this->getFirstOrDefault(function ($item) {
+      return $item->getDuration();
+    }, $all_data, "");
+
+    // Calculate the duration object.
+    $duration_interval = $this->secondsToDateInterval($duration);
+    // Get the duration string.
+    $duration_str = $this->durationService->getDurationStringFromDateInterval($duration_interval);
+
+    // Create the content.
+    $node = Node::create([
+      "type" => "song",
+      "title" => $name,
+      "field_length" => ["duration" => $duration_str],
+      "status" => Node::PUBLISHED,
+      "field_spotify_id" => $spotify_id,
+    ]);
+    $node->save();
+
+    return $node;
+  }
+
+  /**
+   * Create multiple tracks at once with their IDs.
+   */
+  public function createTracks(array $track_ids): array {
+    return array_map(function ($track_id) {
+      return $this->createTrack([$track_id]);
+    }, $track_ids);
   }
 
 }
