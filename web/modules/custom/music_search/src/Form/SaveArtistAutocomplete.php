@@ -59,7 +59,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       return '<img src="' . $item . '" width="100" height="auto">';
     }, $images);
     $this->radioWithOther($form, "images", [
-      '#type' => "radios",
+      '#type' => "checkboxes",
       '#title' => "Images",
       '#options' => array_combine($images, $image_html),
       "#required" => TRUE,
@@ -129,8 +129,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     $genres = $this->getRadioWithOther($form_state, "genres");
 
     // Create the media.
-    $image_path = $images;
-    $media = $this->nodeAutocreation->createImage($image_path);
+    $media = $this->nodeAutocreation->createImages($images);
 
     // Create the selected genres terms.
     $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
@@ -144,7 +143,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
       "field_band_members" => [],
       "field_birth_date" => $birth_date,
       "field_death_date" => $death_date,
-      "field_images_media" => [$media],
+      "field_images_media" => $media,
       "field_website" => $website_link,
       "field_mus" => $genre_terms,
       "field_discogs_id" => $ids["discogs"],
@@ -166,8 +165,13 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $images = $this->getRadioWithOther($form_state, "images");
-    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE || filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
-      $form_state->setErrorByName('CreateArtistUrl', $this->t('Website link and images must be valid urls to create artist.'));
+    foreach ($images as $image) {
+      if (filter_var($image, FILTER_VALIDATE_URL) === FALSE) {
+        $form_state->setErrorByName('CreateArtistUrl', $this->t('Artist image must be a valid url to create artist.'));
+      }
+    }
+    if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE) {
+      $form_state->setErrorByName('CreateArtistUrl', $this->t('Website link must be a valid url to create artist.'));
     }
   }
 
