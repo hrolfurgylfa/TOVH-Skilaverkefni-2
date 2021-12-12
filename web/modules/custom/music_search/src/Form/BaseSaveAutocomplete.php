@@ -59,19 +59,6 @@ abstract class BaseSaveAutocomplete extends FormBase {
    */
   protected function radioWithOther(array &$form, string $id, array $field, array $other_textfield = NULL) {
 
-    // Make sure the option keys aren't too long and will cause a illegal choice
-    // exception that asks to contact administrators.
-    // foreach ($field["#options"] as $key => $value) {
-    //   if (strlen($key) > 30) {
-    //     $shortened_header = "form_option_shortened_";
-    //     $new_key = $shortened_header . substr($key, 0, 20);
-    //     $field["#options"][$new_key] = $value;
-    //     unset($field["#options"][$key]);.
-    // // Save the previous value in the state API so that it can be fetched
-    //     // when the form is read later.
-    //     \Drupal::state()->set("music_service." . $new_key, $key);
-    //   }
-    // }
     // Setup the field.
     $id_string = $id . "_select";
     $field["#attributes"] = ['name' => $id_string];
