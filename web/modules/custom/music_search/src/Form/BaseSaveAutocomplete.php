@@ -116,6 +116,7 @@ abstract class BaseSaveAutocomplete extends FormBase {
         for ($j = 0; $j < count($form); $j++) {
           if ($all_form_keys[$j] === "custom_" . $estimated_radioWithOther_id) {
             $other_textfield_key = $all_form_keys[$j];
+            break;
           }
         }
 
@@ -126,14 +127,16 @@ abstract class BaseSaveAutocomplete extends FormBase {
           $new_form_key = $form_key . "_checkbox_" . $i;
           $this->insertAfterKey($form, $form_key, $new_form_key, $form[$form_key]);
           // Make sure the value returned stays the same.
-          $form[$new_form_key]["#value_callback"] = function ($element, $input, $form_state) use ($option_key) {
-            return ($input === FALSE) ? NULL : $option_key;
-          };
+          // $form[$new_form_key]["#value_callback"] = function ($element, $input, FormStateInterface $form_state) use ($option_key) {
+          //   return ($input === FALSE) ? NULL : $form_state;
+          // };.
+          $form[$new_form_key]["#return_value"] = $option_key;
 
           // Set the checkbox fields values.
           $form[$new_form_key]["#type"] = "checkbox";
           $form[$new_form_key]["#required"] = FALSE;
           unset($form[$new_form_key]["#options"]);
+          unset($form[$new_form_key]["#attributes"]);
           $form[$new_form_key]["#title"] = $options[$option_key];
 
           // Set the toggle button to target this option if it is "other" and
@@ -170,10 +173,12 @@ abstract class BaseSaveAutocomplete extends FormBase {
       $i = 0;
       $next = $form_state->getValue($id . "_checkbox_" . $i);
       while ($next !== NULL) {
-        $values[] = $next;
+        if ($next !== 0) {
+          $values[] = $next;
+        }
 
-        $next = $form_state->getValue($id . "_checkbox_" . $i);
         $i++;
+        $next = $form_state->getValue($id . "_checkbox_" . $i);
       }
 
       // Return the array of values or the default value if the array is empty.
@@ -258,11 +263,13 @@ abstract class BaseSaveAutocomplete extends FormBase {
    */
   protected function getRadioWithOther(FormStateInterface $form_state, string $id) {
     $radio_value = $this->getFormStateValue($form_state, $id . "_select");
-    if ($radio_value !== "other") {
-      return $radio_value;
+    if (is_array($radio_value)) {
+      return array_map(function ($val) use ($form_state, $id) {
+        return ($val !== "other") ? $val : $this->getFormStateValue($form_state, "custom_" . $id);
+      }, $radio_value);
     }
     else {
-      return $this->getFormStateValue($form_state, "custom_" . $id);
+      return ($radio_value !== "other") ? $radio_value : $this->getFormStateValue($form_state, "custom_" . $id);
     }
   }
 

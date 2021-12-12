@@ -109,7 +109,7 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     }, $autofill_data);
     $flat_genres = array_merge(...$genres);
     $this->radioWithOther($form, "genres", [
-      '#type' => "radios",
+      '#type' => "checkboxes",
       '#title' => "Genres",
       '#options' => array_combine($flat_genres, $flat_genres),
     ]);
@@ -133,7 +133,6 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
     $media = $this->nodeAutocreation->createImage($image_path);
 
     // Create the selected genres terms.
-    $genres = [$genres];
     $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
