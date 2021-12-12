@@ -319,6 +319,8 @@ abstract class BaseSaveAutocomplete extends FormBase {
     if (!$spotify_id && !$discogs_id) {
       $res = new RedirectResponse(Url::fromRoute("music_search.search_form")->toString());
       $res->send();
+      $messenger = \Drupal::messenger();
+      $messenger->addMessage('No IDs supplied, please try again later.', $messenger::TYPE_ERROR);
     }
 
     $all_autofill_data = [];

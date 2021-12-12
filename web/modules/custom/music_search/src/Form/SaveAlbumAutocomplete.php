@@ -234,6 +234,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $track_nodes = $this->getOrCreateTracks($songs);
 
     // Create the selected genres terms.
+    $genres = $genres === NULL ? [] : $genres;
     $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
