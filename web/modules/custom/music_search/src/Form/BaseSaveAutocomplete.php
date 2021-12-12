@@ -123,6 +123,10 @@ abstract class BaseSaveAutocomplete extends FormBase {
           }
         }
 
+        $title_key = $estimated_radioWithOther_id . "_title";
+        $new_title = $form[$form_key]["#title"];
+        $this->insertAfterKey($form, $form_key, $title_key, ["#markup" => "<p><b>" . $new_title . "</b></p>"]);
+
         // Loop through each option to make all the options as their own fields.
         for ($i = 0; $i < count($options); $i++) {
           // Make the new field.
