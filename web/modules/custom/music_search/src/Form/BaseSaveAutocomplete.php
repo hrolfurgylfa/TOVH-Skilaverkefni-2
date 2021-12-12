@@ -30,13 +30,6 @@ abstract class BaseSaveAutocomplete extends FormBase {
   protected $nodeAutocreation;
 
   /**
-   * The injected UUID service from Drupal core.
-   *
-   * @var Drupal\Component\Uuid\Uuid
-   */
-  protected $uuidService;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(MusicSearchService $musicSearchService, NodeAutocreationService $nodeAutocreationService) {
