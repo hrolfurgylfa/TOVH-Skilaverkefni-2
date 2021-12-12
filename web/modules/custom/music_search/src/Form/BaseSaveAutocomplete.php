@@ -141,6 +141,7 @@ abstract class BaseSaveAutocomplete extends FormBase {
 
           // Set the checkbox fields values.
           $form[$new_form_key]["#type"] = "checkbox";
+          $form[$new_form_key]["music_service.custom_required"] = $form[$new_form_key]["#required"];
           $form[$new_form_key]["#required"] = FALSE;
           unset($form[$new_form_key]["#options"]);
           unset($form[$new_form_key]["#attributes"]);
@@ -180,7 +181,7 @@ abstract class BaseSaveAutocomplete extends FormBase {
       $i = 0;
       $next = $form_state->getValue($id . "_checkbox_" . $i);
       while ($next !== NULL) {
-        if ($next !== 0) {
+        if ($next !== 0 && $next !== "" && $next !== NULL) {
           $values[] = $next;
         }
 
@@ -256,24 +257,21 @@ abstract class BaseSaveAutocomplete extends FormBase {
   /**
    *
    */
-  protected function unShortenKey($key) {
-    if (is_string($key) && str_starts_with($key, "form_option_shortened_")) {
-      return \Drupal::state()->get("music_service." . $key);
-    }
-    else {
-      return $key;
-    }
-  }
-
-  /**
-   *
-   */
   protected function getRadioWithOther(FormStateInterface $form_state, string $id) {
     $radio_value = $this->getFormStateValue($form_state, $id . "_select");
     if (is_array($radio_value)) {
-      return array_map(function ($val) use ($form_state, $id) {
-        return ($val !== "other") ? $val : $this->getFormStateValue($form_state, "custom_" . $id);
+      $return_val = array_map(function ($val) use ($form_state, $id) {
+        if ($val !== "other") {
+          return $val;
+        }
+        else {
+          $custom_value = $this->getFormStateValue($form_state, "custom_" . $id);
+          return $custom_value === "" || $custom_value === [] ? NULL : $custom_value;
+        }
       }, $radio_value);
+      return array_filter($return_val, function ($item) {
+        return !is_null($item);
+      });
     }
     else {
       return ($radio_value !== "other") ? $radio_value : $this->getFormStateValue($form_state, "custom_" . $id);
@@ -396,6 +394,71 @@ abstract class BaseSaveAutocomplete extends FormBase {
     $this->goBack();
     $messenger = \Drupal::messenger();
     $messenger->addMessage('CONTENT ADDED', $messenger::TYPE_STATUS);
+  }
+
+  /**
+   * Check if a field is required and can support converted "checkboxes" fields.
+   *
+   * This function still needs the real field names so it doesn't automatically
+   * handle conversions of names that have gone though radioWithOther unless
+   * the real key is provided.
+   */
+  protected function fieldIsRequired(string $key, array &$form): bool {
+    if ($form[$key] !== NULL) {
+      // Handle it the regular way.
+      return $form[$key]["#required"] === TRUE;
+    }
+    elseif ($form[$key . "_checkbox_0"] !== NULL) {
+      // This is a converted "checkboxes" field that needs special handling.
+      return $form[$key . "_checkbox_0"]["music_service.custom_required"] === TRUE;
+    }
+    else {
+      // The field couldn't be found.
+      return FALSE;
+    }
+  }
+
+  /**
+   * Validate stuff like checkboxes fields that have been converted and other
+   * fields since they're only required if the "other" checkbox is checked.
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+
+    // Go through the form and validate it.
+    $form_keys = array_keys($form);
+    for ($i = 0; $i < count($form); $i++) {
+      $key = $form_keys[$i];
+
+      // Make sure the other field is filled if it is checked and was made with
+      // the radioWithOther function.
+      if (str_starts_with($key, "custom_")) {
+
+        // Find its most likely parent.
+        $likely_id = implode("_", array_slice(explode("_", $key), 1));
+        $parent_val = $this->getRadioWithOther($form_state, $likely_id);
+
+        // Check if the parent value is empty or has an empty value.
+        $is_empty = $parent_val === NULL || $parent_val === "" || $parent_val === [];
+
+        // Give the error if "other" was selected in the parent field, the
+        // custom field was empty and the parent field was required.
+        if ($is_empty && $this->fieldIsRequired($likely_id . "_select", $form)) {
+          $form_state->setErrorByName($key, $this->t('"Other" was chosen but it was not filled in properly below where it was selected.'));
+        }
+      }
+
+      // Make sure that at least one option is checked on converted checkboxes
+      // fields that were required.
+      $re = '/^(.*?)_checkbox_[0-9]+$/m';
+      if (preg_match($re, $key, $matches)) {
+        $id = $matches[1];
+        $value = $this->getFormStateValue($form_state, $id);
+        $required = $this->fieldIsRequired($id, $form);
+        if ($required && $value === NULL) {
+          $form_state->setErrorByName($key, $this->t("You need to select one of the checkboxes, the first one of them should be highlighted below."));
+        }
+      }
+    }
   }
 
   /**

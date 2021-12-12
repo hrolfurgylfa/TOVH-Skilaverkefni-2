@@ -264,9 +264,11 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
    *
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
     $images = $this->getRadioWithOther($form_state, "images");
     if (filter_var($images, FILTER_VALIDATE_URL) === FALSE) {
-      $form_state->setErrorByName('CreateAlbumUrl', $this->t('Cover image must be a valid url to create the album.'));
+      $form_state->setErrorByName('images_select', $this->t('Cover image must be a valid url to create the album.'));
     }
   }
 

@@ -163,15 +163,17 @@ class SaveArtistAutocomplete extends BaseSaveAutocomplete {
    *
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
     $website_link = $this->getRadioWithOther($form_state, "website_link");
     $images = $this->getRadioWithOther($form_state, "images");
     foreach ($images as $image) {
       if (filter_var($image, FILTER_VALIDATE_URL) === FALSE) {
-        $form_state->setErrorByName('CreateArtistUrl', $this->t('Artist image must be a valid url to create artist.'));
+        $form_state->setErrorByName('custom_images', $this->t('Artist image must be a valid url to create artist.'));
       }
     }
     if (filter_var($website_link, FILTER_VALIDATE_URL) === FALSE) {
-      $form_state->setErrorByName('CreateArtistUrl', $this->t('Website link must be a valid url to create artist.'));
+      $form_state->setErrorByName('custom_website_link', $this->t('Website link must be a valid url to create artist.'));
     }
   }
 
