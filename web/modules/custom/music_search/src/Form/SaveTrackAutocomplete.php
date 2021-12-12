@@ -46,7 +46,7 @@ class SaveTrackAutocomplete extends BaseSaveAutocomplete {
       return $item->getDuration() < 3600 * 24 ? $item->getDuration() : NULL;
     }, $all_autofill_data);
     $human_length = array_map(function ($item) {
-      $duration = $this->secondsToDateInterval($item);
+      $duration = $this->nodeAutocreation->secondsToDateInterval($item);
       $short = $duration->format("%i min %s sec");
       $hours = $duration->format("%h hours ");
       return $duration->h === 0 ? $short : $hours . $short;
