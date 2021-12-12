@@ -104,7 +104,10 @@ abstract class BaseSaveAutocomplete extends FormBase {
    */
   protected function fixCheckboxes(array &$form) {
     // Find all the checkboxes in the form.
-    foreach ($form as $form_key => &$form_value) {
+    for ($form_i = 0; $form_i < count($form); $form_i++) {
+      $form_key = array_keys($form)[$form_i];
+      $form_value = &$form[$form_key];
+
       if ($form_value["#type"] === "checkboxes") {
         $options = &$form[$form_key]["#options"];
 
