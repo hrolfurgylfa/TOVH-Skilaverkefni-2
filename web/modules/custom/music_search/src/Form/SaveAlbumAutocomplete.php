@@ -184,7 +184,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $unique_array = array_unique($extra_flat, SORT_STRING);
     asort($unique_array);
     $this->radioWithOther($form, "tracks", [
-      '#type' => "radios",
+      '#type' => "checkboxes",
       '#title' => "Tracks",
       '#options' => $unique_array,
       "#required" => TRUE,
@@ -205,7 +205,7 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     }, $autofill_data);
     $flat_genres = array_merge(...$genres);
     $this->radioWithOther($form, "genres", [
-      '#type' => "radios",
+      '#type' => "checkboxes",
       '#title' => "Genres",
       '#options' => array_combine($flat_genres, $flat_genres),
     ]);
@@ -225,7 +225,6 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $images = $this->getRadioWithOther($form_state, "images");
     $genres = $this->getRadioWithOther($form_state, "genres");
     $songs = $this->getRadioWithOther($form_state, "tracks");
-    $songs = [$songs];
 
     // Create the media.
     $image_path = $images;
@@ -235,7 +234,6 @@ class SaveAlbumAutocomplete extends BaseSaveAutocomplete {
     $track_nodes = $this->getOrCreateTracks($songs);
 
     // Create the selected genres terms.
-    $genres = [$genres];
     $genre_terms = $this->nodeAutocreation->getOrCreateVocabularyTerms($genres, "music_genre");
 
     // Create the content.
